@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Models\DiscordQuickCommand;
+use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\IconColumn;
@@ -18,7 +19,7 @@ class DiscordQuickCommandResource extends Resource
 {
     protected static ?string $model = DiscordQuickCommand::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-command-line';
+    protected static BackedEnum|string|null $navigationIcon = 'heroicon-o-command-line';
 
     protected static ?string $navigationLabel = 'Discord Quick-Befehle';
 
