@@ -12,12 +12,13 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\Select;
+use UnitEnum;
 
 class DiscordQuickCommandResource extends Resource
 {
     protected static ?string $model = DiscordQuickCommand::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-command-line';
+    protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-command-line';
 
     protected static ?string $navigationLabel = 'Discord Quick-Befehle';
 
@@ -25,7 +26,15 @@ class DiscordQuickCommandResource extends Resource
 
     protected static ?string $pluralModelLabel = 'Quick-Befehle';
 
-    protected static ?string $navigationGroup = 'Discord';
+<<<<<<< HEAD
+<<<<<<< HEAD
+    protected static \UnitEnum|string|null $navigationGroup = 'Discord';
+=======
+    protected static UnitEnum|string|null $navigationGroup = 'Discord';
+>>>>>>> ac0c745ea5a920cf8bedb7863dad091fceff6b77
+=======
+    protected static UnitEnum|string|null $navigationGroup = 'Discord';
+>>>>>>> ac0c745ea5a920cf8bedb7863dad091fceff6b77
 
     public static function form(Schema $schema): Schema
     {
