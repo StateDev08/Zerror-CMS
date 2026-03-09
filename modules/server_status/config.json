@@ -1,0 +1,5 @@
+[
+  {"key": "host", "type": "text", "label": "Host (IP oder Domain)", "default": ""},
+  {"key": "port", "type": "number", "label": "Port", "default": 25565},
+  {"key": "label", "type": "text", "label": "Anzeigename", "default": "Server-Status"}
+]

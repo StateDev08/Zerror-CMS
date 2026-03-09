@@ -1,0 +1,10 @@
+{
+    "name": "event_reminder",
+    "version": "1.0.0",
+    "description": "Erinnerung für nächste Events (Anzeige-Konfiguration).",
+    "provider": "App\\Providers\\EventReminderPluginServiceProvider",
+    "configSchema": [
+        {"key": "title", "type": "text", "label": "Titel der Box", "default": "Nächste Events"},
+        {"key": "max_items", "type": "number", "label": "Max. Anzahl Events", "default": 5}
+    ]
+}

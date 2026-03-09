@@ -1,0 +1,10 @@
+{
+    "name": "partner_slider",
+    "version": "1.0.0",
+    "description": "Partner-Logo-Slider (Geschwindigkeit/Anzahl).",
+    "provider": "App\\Providers\\PartnerSliderPluginServiceProvider",
+    "configSchema": [
+        {"key": "speed", "type": "number", "label": "Geschwindigkeit (ms)", "default": 3000},
+        {"key": "visible_count", "type": "number", "label": "Sichtbare Logos", "default": 4}
+    ]
+}

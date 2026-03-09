@@ -1,0 +1,10 @@
+{
+    "name": "twitch_embed",
+    "version": "1.0.0",
+    "description": "Twitch-Stream-Embed (Kanal).",
+    "provider": "App\\Providers\\TwitchEmbedPluginServiceProvider",
+    "configSchema": [
+        {"key": "channel", "type": "text", "label": "Twitch-Kanal", "default": ""},
+        {"key": "show_chat", "type": "boolean", "label": "Chat anzeigen", "default": false}
+    ]
+}

@@ -1,0 +1,5 @@
+[
+  {"key": "title", "type": "text", "label": "Titel", "default": "Newsletter"},
+  {"key": "target_url", "type": "url", "label": "Ziel-URL (Anmeldeseite)", "default": ""},
+  {"key": "button_text", "type": "text", "label": "Button-Text", "default": "Anmelden"}
+]

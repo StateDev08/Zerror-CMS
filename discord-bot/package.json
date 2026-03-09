@@ -1,0 +1,15 @@
+{
+  "name": "zerrocms-discord-bot",
+  "version": "1.0.0",
+  "description": "Discord-Bot für ZerroCMS: Slash-Commands (Quick-Befehle), Spieler-Verknüpfung",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js",
+    "register": "node src/register-commands.js"
+  },
+  "dependencies": {
+    "discord.js": "^14.14.1",
+    "dotenv": "^16.4.5"
+  }
+}

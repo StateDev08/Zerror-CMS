@@ -1,0 +1,4 @@
+[
+  {"key": "server_url", "type": "text", "label": "TeamSpeak-Server (Host:Port)", "default": ""},
+  {"key": "title", "type": "text", "label": "Widget-Titel", "default": "TeamSpeak Viewer"}
+]

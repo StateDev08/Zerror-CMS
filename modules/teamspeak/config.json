@@ -1,0 +1,5 @@
+[
+  {"key": "server_url", "type": "text", "label": "TeamSpeak-Server-URL oder Host", "default": ""},
+  {"key": "port", "type": "number", "label": "Port", "default": 9987},
+  {"key": "button_text", "type": "text", "label": "Button-Text", "default": "TeamSpeak beitreten"}
+]

@@ -1,0 +1,10 @@
+{
+    "name": "discord_embed",
+    "version": "1.0.0",
+    "description": "Discord-Widget oder Einladungs-Link.",
+    "provider": "App\\Providers\\DiscordEmbedPluginServiceProvider",
+    "configSchema": [
+        {"key": "invite_url", "type": "url", "label": "Discord-Invite-URL", "default": ""},
+        {"key": "widget_title", "type": "text", "label": "Widget-Titel", "default": "Discord"}
+    ]
+}

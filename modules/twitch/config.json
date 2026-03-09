@@ -1,0 +1,4 @@
+[
+  {"key": "channel", "type": "text", "label": "Twitch-Kanal", "default": ""},
+  {"key": "button_text", "type": "text", "label": "Button-Text", "default": "Auf Twitch ansehen"}
+]

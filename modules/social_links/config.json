@@ -1,0 +1,6 @@
+[
+  {"key": "twitter_url", "type": "url", "label": "Twitter/X URL", "default": ""},
+  {"key": "youtube_url", "type": "url", "label": "YouTube URL", "default": ""},
+  {"key": "twitch_url", "type": "url", "label": "Twitch URL", "default": ""},
+  {"key": "title", "type": "text", "label": "Titel", "default": "Folge uns"}
+]

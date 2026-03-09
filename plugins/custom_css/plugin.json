@@ -1,0 +1,10 @@
+{
+    "name": "custom_css",
+    "version": "1.0.0",
+    "description": "Eigenes CSS aus Konfiguration einbinden.",
+    "provider": "App\\Providers\\CustomCssPluginServiceProvider",
+    "configSchema": [
+        {"key": "css_content", "type": "text", "label": "CSS (wird in style-Tag eingefügt)", "default": ""},
+        {"key": "enabled", "type": "boolean", "label": "Aktiv", "default": false}
+    ]
+}

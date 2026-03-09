@@ -1,0 +1,10 @@
+{
+    "name": "maintenance",
+    "version": "1.0.0",
+    "description": "Wartungsmodus (An/Aus + optionaler Hinweistext).",
+    "provider": "App\\Providers\\MaintenancePluginServiceProvider",
+    "configSchema": [
+        {"key": "enabled", "type": "boolean", "label": "Wartungsmodus aktiv", "default": false},
+        {"key": "message", "type": "text", "label": "Hinweistext", "default": "Wir sind gleich wieder da."}
+    ]
+}

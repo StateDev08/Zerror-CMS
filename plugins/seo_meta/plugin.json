@@ -1,0 +1,10 @@
+{
+    "name": "seo_meta",
+    "version": "1.0.0",
+    "description": "Zusätzliche Meta-Tags pro Seite (Basis-Config).",
+    "provider": "App\\Providers\\SeoMetaPluginServiceProvider",
+    "configSchema": [
+        {"key": "default_description", "type": "text", "label": "Standard Meta-Description", "default": ""},
+        {"key": "default_keywords", "type": "text", "label": "Standard Meta-Keywords", "default": ""}
+    ]
+}

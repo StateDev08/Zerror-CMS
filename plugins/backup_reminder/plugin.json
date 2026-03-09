@@ -1,0 +1,10 @@
+{
+    "name": "backup_reminder",
+    "version": "1.0.0",
+    "description": "Admin-Hinweis „Backup prüfen“ im ACP.",
+    "provider": "App\\Providers\\BackupReminderPluginServiceProvider",
+    "configSchema": [
+        {"key": "reminder_text", "type": "text", "label": "Hinweistext", "default": "Bitte regelmäßig Backups prüfen."},
+        {"key": "enabled", "type": "boolean", "label": "Hinweis anzeigen", "default": true}
+    ]
+}

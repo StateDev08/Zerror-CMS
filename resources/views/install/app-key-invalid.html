@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ZerroCMS – APP_KEY ungültig</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100 min-h-screen flex items-center justify-center p-4">
+    <div class="w-full max-w-xl bg-white rounded-xl shadow-lg p-8">
+        <h1 class="text-2xl font-bold text-slate-800 mb-2">APP_KEY ungültig</h1>
+        <p class="text-slate-600 text-sm mb-4">Der Schlüssel in der Datei <strong>.env</strong> (APP_KEY) ist leer oder hat eine falsche Länge. Laravel benötigt einen gültigen Schlüssel im Format <code class="bg-slate-100 px-1 rounded">base64:...</code> (für AES-256-CBC: 32 Bytes).</p>
+
+        <div class="space-y-3 text-sm text-slate-700">
+            <h2 class="font-semibold text-slate-800">So beheben Sie das:</h2>
+            <ol class="list-decimal list-inside space-y-2">
+                <li>Per <strong>SSH</strong> im Projektordner: <code class="bg-slate-100 px-1 rounded">php artisan key:generate</code> ausführen. Das setzt APP_KEY in .env auf einen gültigen Wert.</li>
+                <li>Oder in <strong>.env</strong> die Zeile <code class="bg-slate-100 px-1 rounded">APP_KEY=</code> leer lassen und unten „Install-Seite erneut aufrufen“ klicken – der Installer versucht dann, einen Schlüssel zu erzeugen (falls .env beschreibbar ist).</li>
+            </ol>
+        </div>
+
+        <div class="mt-6 pt-4 border-t border-slate-200">
+            <a href="/install" class="inline-block px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg font-medium">→ Install-Seite erneut aufrufen</a>
+        </div>
+    </div>
+</body>
+</html>

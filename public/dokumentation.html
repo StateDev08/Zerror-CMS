@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ZerroCMS – Server-Dokumentation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --discord-bg: #313338;
+      --discord-sidebar: #2b2d31;
+      --discord-panel: #383a40;
+      --discord-blurple: #5865f2;
+      --discord-blurple-hover: #4752c4;
+      --discord-green: #23a559;
+      --discord-text: #f2f3f5;
+      --discord-text-muted: #b5bac1;
+      --discord-border: #3f4147;
+      --radius: 8px;
+      --radius-sm: 4px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Inter', 'gg sans', 'Whitney', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      background: var(--discord-bg);
+      color: var(--discord-text);
+      line-height: 1.5;
+      min-height: 100vh;
+      display: flex;
+    }
+    .sidebar {
+      width: 240px;
+      min-width: 240px;
+      background: var(--discord-sidebar);
+      padding: 16px 0;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+      border-right: 1px solid var(--discord-border);
+    }
+    .sidebar h2 {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      color: var(--discord-text-muted);
+      padding: 0 16px 8px;
+      margin: 0;
+    }
+    .sidebar a {
+      display: block;
+      padding: 6px 16px;
+      color: var(--discord-text-muted);
+      text-decoration: none;
+      font-size: 14px;
+      border-radius: var(--radius-sm);
+      margin: 0 8px;
+    }
+    .sidebar a:hover { color: var(--discord-text); background: var(--discord-panel); }
+    .sidebar a.active { color: var(--discord-text); background: var(--discord-panel); }
+    .main {
+      flex: 1;
+      padding: 24px 40px 48px;
+      max-width: 900px;
+    }
+    .header {
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--discord-border);
+    }
+    .header h1 {
+      font-size: 24px;
+      font-weight: 700;
+      margin: 0 0 8px;
+      color: var(--discord-text);
+    }
+    .header p {
+      margin: 0;
+      color: var(--discord-text-muted);
+      font-size: 14px;
+    }
+    .card {
+      background: var(--discord-panel);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      margin-bottom: 24px;
+      border: 1px solid var(--discord-border);
+    }
+    .card h2 {
+      font-size: 18px;
+      font-weight: 600;
+      margin: 0 0 12px;
+      color: var(--discord-text);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .card h2 .icon { font-size: 22px; }
+    .card h3 {
+      font-size: 14px;
+      font-weight: 600;
+      margin: 16px 0 8px;
+      color: var(--discord-text-muted);
+    }
+    .card p, .card li {
+      color: var(--discord-text-muted);
+      font-size: 14px;
+      margin: 0 0 8px;
+    }
+    .card ul {
+      margin: 0 0 12px;
+      padding-left: 20px;
+    }
+    pre, code {
+      font-family: 'Consolas', 'Monaco', monospace;
+      font-size: 13px;
+      background: #1e1f22;
+      color: #e2e3e5;
+      border-radius: var(--radius-sm);
+      padding: 2px 6px;
+    }
+    pre {
+      padding: 16px;
+      overflow-x: auto;
+      margin: 12px 0;
+      border: 1px solid var(--discord-border);
+    }
+    pre code { padding: 0; background: none; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+      color: var(--discord-text-muted);
+    }
+    th, td {
+      padding: 10px 12px;
+      text-align: left;
+      border-bottom: 1px solid var(--discord-border);
+    }
+    th { font-weight: 600; color: var(--discord-text); }
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+    .badge-plesk { background: #25262b; color: #b5bac1; }
+    .badge-apache { background: #25262b; color: #b5bac1; }
+    .badge-nginx { background: #25262b; color: #b5bac1; }
+    .badge-iis { background: #25262b; color: #b5bac1; }
+    .badge-cpanel { background: #25262b; color: #b5bac1; }
+    .badge-caddy { background: #25262b; color: #b5bac1; }
+    .footer-note {
+      margin-top: 40px;
+      padding-top: 24px;
+      border-top: 1px solid var(--discord-border);
+      font-size: 13px;
+      color: var(--discord-text-muted);
+    }
+    .footer-note a { color: var(--discord-blurple); text-decoration: none; }
+    .footer-note a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <nav class="sidebar">
+    <h2>Webserver</h2>
+    <a href="#voraussetzungen">Voraussetzungen</a>
+    <a href="#apache">Apache</a>
+    <a href="#nginx">Nginx</a>
+    <a href="#iis">IIS</a>
+    <a href="#plesk">Plesk</a>
+    <a href="#cpanel">cPanel</a>
+    <a href="#caddy">Caddy</a>
+    <a href="#env">.env &amp; Befehle</a>
+    <h2>Allgemein</h2>
+    <a href="#checkliste">Kurz-Checkliste</a>
+  </nav>
+  <main class="main">
+    <header class="header">
+      <h1>ZerroCMS – Server-Dokumentation</h1>
+      <p>Deployment-Anleitungen für alle gängigen Webserver. Document Root immer auf <code>public/</code> setzen.</p>
+    </header>
+
+    <section class="card" id="voraussetzungen">
+      <h2><span class="icon">📋</span> Voraussetzungen</h2>
+      <ul>
+        <li><strong>PHP</strong> 8.2 oder höher (mbstring, openssl, pdo_mysql, tokenizer, xml, ctype, json, bcmath, fileinfo)</li>
+        <li><strong>MySQL</strong> oder <strong>MariaDB</strong></li>
+        <li>Document Root des Webservers zeigt auf den Ordner <strong><code>public</code></strong> (nicht auf das Projekt-Root)</li>
+      </ul>
+    </section>
+
+    <section class="card" id="apache">
+      <h2><span class="icon">🔶</span> Apache <span class="badge badge-apache">.htaccess</span></h2>
+      <p>Laravel liefert eine <code>public/.htaccess</code> mit. Stelle sicher, dass <code>mod_rewrite</code> aktiv ist.</p>
+      <h3>Virtual Host (Beispiel)</h3>
+      <pre><code>&lt;VirtualHost *:80&gt;
+    ServerName deine-domain.de
+    DocumentRoot /var/www/zerrocms/public
+
+    &lt;Directory /var/www/zerrocms/public&gt;
+        AllowOverride All
+        Require all granted
+    &lt;/Directory&gt;
+&lt;/VirtualHost&gt;</code></pre>
+      <p>Document Root muss immer <code>.../public</code> sein. Nach Änderung: <code>sudo systemctl reload apache2</code> (bzw. <code>httpd</code>).</p>
+    </section>
+
+    <section class="card" id="nginx">
+      <h2><span class="icon">🟢</span> Nginx</h2>
+      <p>Nginx hat keine .htaccess; die Weiterleitung muss in der Server-Konfiguration stehen.</p>
+      <h3>Server-Block (Beispiel)</h3>
+      <pre><code>server {
+    listen 80;
+    server_name deine-domain.de;
+    root /var/www/zerrocms/public;
+
+    add_header X-Frame-Options "SAMEORIGIN";
+    add_header X-Content-Type-Options "nosniff";
+
+    index index.php;
+
+    charset utf-8;
+
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+
+    location = /favicon.ico { access_log off; log_not_found off; }
+    location = /robots.txt  { access_log off; log_not_found off; }
+
+    location ~ \.php$ {
+        fastcgi_pass unix:/var/run/php/php8.2-fpm.sock;
+        fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+        include fastcgi_params;
+        fastcgi_hide_header X-Powered-By;
+    }
+}</code></pre>
+      <p><code>root</code> muss auf <code>.../public</code> zeigen. Nach Änderung: <code>sudo nginx -t && sudo systemctl reload nginx</code>.</p>
+    </section>
+
+    <section class="card" id="iis">
+      <h2><span class="icon">🪟</span> IIS (Windows Server)</h2>
+      <p>Für IIS wird ein <code>web.config</code> in <code>public/</code> benötigt (Laravel bringt oft eine Vorlage mit).</p>
+      <h3>Wichtig</h3>
+      <ul>
+        <li>Physischer Pfad der Website/Application = Ordner <strong><code>public</code></strong> deines Projekts.</li>
+        <li>URL Rewrite Module für IIS installieren (Microsoft oder Hosting-Anbieter).</li>
+        <li>PHP über FastCGI anbinden und <code>SCRIPT_FILENAME</code> korrekt setzen.</li>
+      </ul>
+      <p>Inhalt von <code>public/web.config</code> (Ausschnitt): Rewrite-Regeln für Laravel (alle Anfragen auf <code>index.php</code> leiten). Siehe Laravel-Dokumentation für die aktuelle <code>web.config</code>-Vorlage.</p>
+    </section>
+
+    <section class="card" id="plesk">
+      <h2><span class="icon">🔷</span> Plesk <span class="badge badge-plesk">Panel</span></h2>
+      <ol style="margin:0; padding-left:20px; color: var(--discord-text-muted);">
+        <li><strong>Document Root:</strong> Domains → deine Domain → Hosting &amp; DNS → Hosting-Einstellungen → Dokumentenstamm auf <code>.../public</code> setzen (z.&nbsp;B. <code>/var/www/vhosts/deine-domain.de/httpdocs/public</code>).</li>
+        <li><strong>PHP:</strong> Domains → PHP-Einstellungen → PHP 8.2 oder 8.3, Extensions: mbstring, openssl, pdo_mysql, tokenizer, xml, ctype, json, bcmath, fileinfo.</li>
+        <li><strong>Dateien:</strong> Projekt per Git/FTP/File Manager in z.&nbsp;B. <code>httpdocs</code> legen; Document Root zeigt auf <code>httpdocs/public</code>.</li>
+        <li><strong>Datenbank:</strong> Databases → Add Database anlegen, Zugangsdaten notieren.</li>
+        <li><strong>.env:</strong> Im Projekt-Root anlegen (aus .env.example), DB-Daten, APP_URL, APP_KEY eintragen.</li>
+        <li><strong>SSH/Terminal:</strong> <code>composer install --no-dev --optimize-autoloader</code>, <code>php artisan migrate --force</code>, <code>php artisan storage:link</code>, <code>php artisan config:cache</code>.</li>
+        <li><strong>Admin:</strong> User per Tinker anlegen oder unter <code>/admin</code> registrieren (falls aktiviert).</li>
+        <li><strong>Rechte:</strong> <code>storage/</code> und <code>bootstrap/cache/</code> für Webserver-Benutzer beschreibbar (z.&nbsp;B. 775).</li>
+      </ol>
+    </section>
+
+    <section class="card" id="cpanel">
+      <h2><span class="icon">📦</span> cPanel</h2>
+      <p>Document Root auf <code>public</code> setzen (Domains → Domains → Document Root auf <code>public</code> zeigen, z.&nbsp;B. <code>public_html/public</code> oder Projekt in Unterordner und Document Root dorthin).</p>
+      <ul>
+        <li><strong>PHP:</strong> MultiPHP oder Select PHP Version → 8.2+, benötigte Extensions aktivieren.</li>
+        <li><strong>Datenbank:</strong> MySQL Database Wizard nutzen, User zuweisen.</li>
+        <li><strong>.env:</strong> Im Projekt-Root (nicht in public) anlegen und anpassen.</li>
+        <li><strong>Terminal/SSH:</strong> <code>composer install --no-dev --optimize-autoloader</code>, <code>php artisan migrate --force</code>, <code>php artisan storage:link</code>, <code>php artisan config:cache</code>.</li>
+      </ul>
+      <p>Falls kein SSH: Einmal-Skripte über „Run script“ oder PHP-CLI-Cron des Hosters ausführen.</p>
+    </section>
+
+    <section class="card" id="caddy">
+      <h2><span class="icon">🦬</span> Caddy</h2>
+      <p>Minimaler Server-Block mit PHP-FPM:</p>
+      <pre><code>deine-domain.de {
+    root * /var/www/zerrocms/public
+    encode gzip
+    file_server
+    php_fastcgi unix//var/run/php/php8.2-fpm.sock
+    try_files {path} {path}/ /index.php?{query}
+}</code></pre>
+      <p><code>root</code> zeigt auf <code>public</code>. Caddy neu laden nach Änderung der Caddyfile.</p>
+    </section>
+
+    <section class="card" id="env">
+      <h2><span class="icon">⚙️</span> .env &amp; Artisan-Befehle</h2>
+      <p>Für alle Server: Im Projekt-Root <code>.env</code> anlegen (z.&nbsp;B. aus <code>.env.example</code>). Mindestens:</p>
+      <pre><code>APP_NAME=ZerroCMS
+APP_ENV=production
+APP_DEBUG=false
+APP_URL=https://deine-domain.de
+
+DB_CONNECTION=mysql
+DB_HOST=localhost
+DB_PORT=3306
+DB_DATABASE=dein_db_name
+DB_USERNAME=dein_db_user
+DB_PASSWORD=dein_db_passwort
+
+QUEUE_CONNECTION=sync
+SESSION_DRIVER=database
+CACHE_STORE=database
+
+CLAN_NAME="Dein Clan"
+CLAN_THEME=default
+APPLICATION_NOTIFY_EMAIL=admin@deine-domain.de</code></pre>
+      <p><strong>Befehle (einmalig bzw. nach Deploy):</strong></p>
+      <pre><code>php artisan key:generate   # falls APP_KEY leer
+composer install --no-dev --optimize-autoloader
+php artisan migrate --force
+php artisan storage:link
+php artisan config:cache
+php artisan view:cache</code></pre>
+    </section>
+
+    <section class="card" id="checkliste">
+      <h2><span class="icon">✅</span> Kurz-Checkliste</h2>
+      <table>
+        <thead>
+          <tr><th>Schritt</th><th>Aktion</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>1</td><td>Document Root auf <code>public/</code> zeigen</td></tr>
+          <tr><td>2</td><td>PHP 8.2+ und Extensions aktivieren</td></tr>
+          <tr><td>3</td><td>Projekt-Dateien hochladen</td></tr>
+          <tr><td>4</td><td>MySQL-Datenbank anlegen</td></tr>
+          <tr><td>5</td><td>.env anlegen, APP_KEY setzen</td></tr>
+          <tr><td>6</td><td>composer install, migrate, storage:link, config:cache</td></tr>
+          <tr><td>7</td><td>Admin-User anlegen, unter /admin testen</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <footer class="footer-note">
+      ZerroCMS · Entwickelt von <strong>BlueByte Development</strong>. Weitere Infos siehe <a href="README.md">README.md</a>.
+    </footer>
+  </main>
+</body>
+</html>

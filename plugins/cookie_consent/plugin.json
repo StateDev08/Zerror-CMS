@@ -1,0 +1,11 @@
+{
+    "name": "cookie_consent",
+    "version": "1.0.0",
+    "description": "Cookie-Consent-Banner mit konfigurierbaren Texten und Link.",
+    "provider": "App\\Providers\\CookieConsentPluginServiceProvider",
+    "configSchema": [
+        {"key": "banner_text", "type": "text", "label": "Hinweistext", "default": "Wir nutzen Cookies. Mit der Nutzung stimmst du zu."},
+        {"key": "privacy_url", "type": "url", "label": "Datenschutz-URL", "default": ""},
+        {"key": "accept_button", "type": "text", "label": "Text Akzeptieren-Button", "default": "Akzeptieren"}
+    ]
+}

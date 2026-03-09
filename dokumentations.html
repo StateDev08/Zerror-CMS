@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZerroCMS – Dokumentation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #313338;
+            --bg-secondary: #2b2d31;
+            --bg-tertiary: #1e1f22;
+            --bg-elevated: #383a40;
+            --text-primary: #f2f3f5;
+            --text-secondary: #b5bac1;
+            --text-muted: #80848e;
+            --accent: #5865f2;
+            --accent-hover: #4752c4;
+            --success: #23a559;
+            --warning: #f0b232;
+            --danger: #f23f43;
+            --border: #3f4147;
+            --radius: 8px;
+            --radius-lg: 12px;
+            --shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+        .sidebar {
+            width: 260px;
+            background: var(--bg-tertiary);
+            padding: 24px 0;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+            border-right: 1px solid var(--border);
+        }
+        .sidebar-logo {
+            padding: 0 24px 24px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 16px;
+        }
+        .sidebar-logo h1 { font-size: 1.25rem; font-weight: 700; color: var(--text-primary); }
+        .sidebar-logo span { color: var(--accent); font-weight: 600; }
+        .sidebar-nav { padding: 0 12px; }
+        .sidebar-section {
+            margin-bottom: 16px;
+        }
+        .sidebar-section-title {
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            padding: 8px 12px;
+        }
+        .sidebar-nav a {
+            display: block;
+            padding: 8px 12px;
+            border-radius: var(--radius);
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9375rem;
+            transition: background 0.15s, color 0.15s;
+        }
+        .sidebar-nav a:hover { background: var(--bg-elevated); color: var(--text-primary); }
+        .sidebar-nav a.active { background: var(--accent); color: white; }
+        .main {
+            flex: 1;
+            padding: 40px 48px 80px;
+            max-width: 900px;
+        }
+        h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 48px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-primary);
+        }
+        h2:first-of-type { margin-top: 0; }
+        h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 12px; color: var(--text-primary); }
+        p { margin-bottom: 12px; color: var(--text-secondary); }
+        .embed {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 20px 24px;
+            margin: 16px 0;
+            border-left: 4px solid var(--accent);
+        }
+        .embed-title { font-weight: 600; font-size: 1rem; margin-bottom: 8px; color: var(--text-primary); }
+        .embed-desc { font-size: 0.9rem; color: var(--text-secondary); }
+        .embed-field {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+        }
+        .embed-field-name { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; color: var(--text-muted); margin-bottom: 4px; }
+        .embed-field-value { font-size: 0.9rem; color: var(--text-secondary); }
+        .code-block {
+            background: var(--bg-tertiary);
+            border-radius: var(--radius);
+            padding: 16px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.875rem;
+            overflow-x: auto;
+            margin: 12px 0;
+            border: 1px solid var(--border);
+        }
+        .code-block code { color: var(--text-secondary); }
+        .inline-code {
+            background: var(--bg-elevated);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Consolas', monospace;
+            font-size: 0.875em;
+            color: var(--accent);
+        }
+        ul, ol { margin: 12px 0 12px 24px; color: var(--text-secondary); }
+        li { margin-bottom: 6px; }
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .badge-success { background: rgba(35,165,89,0.2); color: var(--success); }
+        .badge-warning { background: rgba(240,178,50,0.2); color: var(--warning); }
+        .badge-accent { background: rgba(88,101,242,0.2); color: var(--accent); }
+        .grid-2 { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin: 16px 0; }
+        .card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 16px;
+            transition: border-color 0.15s;
+        }
+        .card:hover { border-color: var(--accent); }
+        .card-title { font-weight: 600; margin-bottom: 4px; }
+        .card-desc { font-size: 0.85rem; color: var(--text-muted); }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+            font-size: 0.9rem;
+        }
+        th, td { padding: 12px 16px; text-align: left; border-bottom: 1px solid var(--border); }
+        th { background: var(--bg-tertiary); color: var(--text-muted); font-weight: 600; font-size: 0.75rem; text-transform: uppercase; }
+        td { color: var(--text-secondary); }
+        .toc { background: var(--bg-secondary); border-radius: var(--radius-lg); padding: 20px; margin: 24px 0; border: 1px solid var(--border); }
+        .toc-title { font-weight: 600; margin-bottom: 12px; }
+        .toc a { color: var(--accent); text-decoration: none; display: block; padding: 4px 0; font-size: 0.9rem; }
+        .toc a:hover { text-decoration: underline; }
+        @media (max-width: 900px) {
+            .layout { flex-direction: column; }
+            .sidebar { width: 100%; height: auto; position: relative; }
+            .main { padding: 24px 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <h1><span>Zerro</span>CMS</h1>
+                <p style="font-size:0.8rem;color:var(--text-muted);margin-top:4px;">Clan CMS Dokumentation</p>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="sidebar-section">
+                    <div class="sidebar-section-title">Überblick</div>
+                    <a href="#was-ist">Was ist ZerroCMS?</a>
+                    <a href="#features">Funktionen</a>
+                </div>
+                <div class="sidebar-section">
+                    <div class="sidebar-section-title">Installation</div>
+                    <a href="#installation">Installation</a>
+                    <a href="#konfiguration">Konfiguration</a>
+                </div>
+                <div class="sidebar-section">
+                    <div class="sidebar-section-title">Admin & Inhalte</div>
+                    <a href="#admin">Admin-Panel</a>
+                    <a href="#themes">Themes</a>
+                    <a href="#module">Module</a>
+                    <a href="#plugins">Plugins</a>
+                </div>
+                <div class="sidebar-section">
+                    <div class="sidebar-section-title">Bereiche</div>
+                    <a href="#bereiche">Alle Bereiche</a>
+                    <a href="#discord">Discord-Bot</a>
+                </div>
+                <div class="sidebar-section">
+                    <div class="sidebar-section-title">Technik</div>
+                    <a href="#anforderungen">Anforderungen</a>
+                    <a href="#hosting">Hosting</a>
+                </div>
+            </nav>
+        </aside>
+        <main class="main">
+            <h1 style="font-size:2rem;margin-bottom:8px;">ZerroCMS Dokumentation</h1>
+            <p style="color:var(--text-muted);margin-bottom:32px;">Vollständige Anleitung für das Clan Content Management System</p>
+
+            <h2 id="was-ist">Was ist ZerroCMS?</h2>
+            <div class="embed">
+                <div class="embed-title">Clan CMS für Gaming-Communities</div>
+                <div class="embed-desc">
+                    ZerroCMS ist ein vollständiges Content-Management-System speziell für Clans und Gaming-Communities. 
+                    Es läuft auf Laravel (PHP) mit Filament als Admin-Panel und bietet alles, was ein Clan braucht: 
+                    News, Forum, Galerie, Kalender, Bewerbungen, Crafting/Aufträge, Marketplace, Wiki, Clan-Bank, 
+                    Teams, Leaderboards und vieles mehr. Für Shared Hosting geeignet – kein Redis nötig.
+                </div>
+                <div class="embed-field">
+                    <div class="embed-field-name">Technologie</div>
+                    <div class="embed-field-value">Laravel 12 · Filament 5 · Livewire · Tailwind CSS · Blade</div>
+                </div>
+            </div>
+
+            <h2 id="features">Funktionen im Überblick</h2>
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-title">News & Seiten</div>
+                    <div class="card-desc">Blog-ähnliche News, statische Seiten (Impressum, Datenschutz, AGB)</div>
+                </div>
+                <div class="card">
+                    <div class="card-title">Forum</div>
+                    <div class="card-desc">Eigenes Forum mit Kategorien, Threads und Antworten</div>
+                </div>
+                <div class="card">
+                    <div class="card-title">Galerie</div>
+                    <div class="card-desc">Alben mit Bildern, Upload und Verwaltung</div>
+                </div>
+                <div class="card">
+                    <div class="card-title">Kalender & Events</div>
+                    <div class="card-desc">Termine, Trainings, Matches – automatisch in Discord postbar</div>
+                </div>
+                <div class="card">
+                    <div class="card-title">Bewerbungen</div>
+                    <div class="card-desc">Bewerbungsformular mit E-Mail- und Discord-Benachrichtigung</div>
+                </div>
+                <div class="card">
+                    <div class="card-title">Crafting & Aufträge</div>
+                    <div class="card-desc">Craftable Items, Item-Requests – Mitglieder können Aufträge erstellen</div>
+                </div>
+                <div class="card">
+                    <div class="card-title">Marketplace</div>
+                    <div class="card-desc">Anzeigenmarkt – neue Angebote erscheinen automatisch im Discord-Shop-Channel</div>
+                </div>
+                <div class="card">
+                    <div class="card-title">Clan-Bereiche</div>
+                    <div class="card-desc">Teams, Bank, Regeln, Dokumente, Leaderboard, Feedback, Achievements</div>
+                </div>
+                <div class="card">
+                    <div class="card-title">Wiki</div>
+                    <div class="card-desc">Kategorien, Artikel, Suche</div>
+                </div>
+                <div class="card">
+                    <div class="card-title">UserCP</div>
+                    <div class="card-desc">Profil, Passwort, Meine Aufträge, Discord-Verknüpfung</div>
+                </div>
+                <div class="card">
+                    <div class="card-title">Discord-Bot</div>
+                    <div class="card-desc">Slash-Commands, Quick-Befehle, Shop/Events in Discord</div>
+                </div>
+                <div class="card">
+                    <div class="card-title">Themes & Module</div>
+                    <div class="card-desc">Wechselbare Designs, ein-/ausschaltbare Module und Plugins</div>
+                </div>
+            </div>
+
+            <h2 id="installation">Installation</h2>
+            <h3>Variante A: Webbrowser-Installer (empfohlen)</h3>
+            <ol>
+                <li>Abhängigkeiten installieren: <code class="inline-code">composer install</code></li>
+                <li>Im Browser <code class="inline-code">/install</code> aufrufen</li>
+                <li>Dem Assistenten folgen: Systemprüfung → Datenbank → Migrationen → Admin-User anlegen</li>
+                <li>Speicher-Link erstellen: <code class="inline-code">php artisan storage:link</code></li>
+                <li>Für Produktion: <code class="inline-code">npm ci && npm run build</code></li>
+            </ol>
+            <h3>Variante B: Manuell</h3>
+            <div class="code-block">
+                <code>cp .env.example .env<br>
+php artisan key:generate<br>
+# .env: DB_HOST, DB_DATABASE, DB_USERNAME, DB_PASSWORD eintragen<br>
+php artisan migrate<br>
+php artisan db:seed<br>
+php artisan storage:link</code>
+            </div>
+
+            <h2 id="konfiguration">Konfiguration</h2>
+            <p>Wichtige <code class="inline-code">.env</code>-Variablen:</p>
+            <table>
+                <thead>
+                    <tr><th>Variable</th><th>Beschreibung</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><code class="inline-code">CLAN_NAME</code></td><td>Name des Clans</td></tr>
+                    <tr><td><code class="inline-code">CLAN_THEME</code></td><td>Theme (default, pax-neon, pax-cyber, pax-ember, pax-void, pax-steel)</td></tr>
+                    <tr><td><code class="inline-code">APPLICATION_NOTIFY_EMAIL</code></td><td>E-Mail bei neuer Bewerbung</td></tr>
+                    <tr><td><code class="inline-code">DISCORD_WEBHOOK_URL</code></td><td>Webhook für Bewerbungs-Benachrichtigung</td></tr>
+                    <tr><td><code class="inline-code">DISCORD_INVITE_URL</code></td><td>Discord-Einladungslink</td></tr>
+                    <tr><td><code class="inline-code">DISCORD_BOT_ENABLED</code></td><td>Discord-Bot aktivieren (true/false)</td></tr>
+                    <tr><td><code class="inline-code">DISCORD_BOT_TOKEN</code></td><td>Bot-Token aus Discord Developer Portal</td></tr>
+                    <tr><td><code class="inline-code">DISCORD_BOT_API_KEY</code></td><td>API-Key für Bot ↔ Laravel</td></tr>
+                    <tr><td><code class="inline-code">DISCORD_SHOP_WEBHOOK_URL</code></td><td>Webhook für Shop-Channel (neue Marketplace-Anzeigen)</td></tr>
+                    <tr><td><code class="inline-code">DISCORD_EVENTS_WEBHOOK_URL</code></td><td>Webhook für Events-Channel</td></tr>
+                </tbody>
+            </table>
+
+            <h2 id="admin">Admin-Panel</h2>
+            <p>Zugang unter <code class="inline-code">/admin</code>. Login mit Admin-User (Rolle <code class="inline-code">super-admin</code> oder Berechtigung <code class="inline-code">access_admin</code>).</p>
+            <div class="embed">
+                <div class="embed-title">Bereiche im Admin</div>
+                <div class="embed-desc">
+                    Ränge, Mitglieder, Bewerbungen, Termine (Events), News, Seiten, Forum, Galerie, Crafting (Craftable Items, Item Requests), 
+                    Clan-Dokumente, Marketplace (Kategorien, Anzeigen), Wiki, Jobs, Downloads, Partner, Umfragen, Clan-Teams, Clan-Bank, 
+                    Clan-Regeln, Leaderboard, Clan-Dokumente, Clan-Feedback, Clan-Ankündigungen, Clan-Achievements, Widget-Instanzen, 
+                    Theme-Editor, Einstellungen (Site, Medien, Wartung, Bewerbungen, Frontend), Menüs, Rechteverwaltung, Module, Plugins.
+                </div>
+                <div class="embed-field">
+                    <div class="embed-field-name">Discord Quick-Befehle</div>
+                    <div class="embed-field-value">Unter <strong>Discord → Quick-Befehle</strong> kannst du Slash-Commands anlegen (z. B. Name <code class="inline-code">spitzhacke</code>, Antworttext „Wer braucht eine Spitzhacke? …“). Diese werden im Discord-Bot als <code class="inline-code">/befehl run name:spitzhacke</code> nutzbar.</div>
+                </div>
+            </div>
+
+            <h2 id="themes">Themes</h2>
+            <p>Wechselbare Designs mit eigenem Farbschema. Im Admin unter <strong>Theme-Editor</strong> anpassbar (Farben, Dark-Mode, Sidebar-Position, Widget-Reihenfolge).</p>
+            <table>
+                <thead>
+                    <tr><th>Theme</th><th>Stil</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><code class="inline-code">default</code></td><td>Hell/Dunkel, Plus Jakarta Sans, modern</td></tr>
+                    <tr><td><code class="inline-code">pax-neon</code></td><td>Mint/Cyan, dunkel, Neon-Glow</td></tr>
+                    <tr><td><code class="inline-code">pax-cyber</code></td><td>Blau, Slate, Tech-Look</td></tr>
+                    <tr><td><code class="inline-code">pax-ember</code></td><td>Orange, warm</td></tr>
+                    <tr><td><code class="inline-code">pax-void</code></td><td>Lila, sehr dunkel</td></tr>
+                    <tr><td><code class="inline-code">pax-steel</code></td><td>Grau, reduziert</td></tr>
+                </tbody>
+            </table>
+
+            <h2 id="module">Module</h2>
+            <p>Ein-/ausschaltbare Funktionsbereiche. Unter <strong>Module</strong> im Admin aktivieren. Beispiele:</p>
+            <ul>
+                <li>Discord, Discord Invite</li>
+                <li>Teamspeak, TS3 Viewer, Voice Chat</li>
+                <li>Twitch, Twitter</li>
+                <li>Newsletter Box, Cookie Banner</li>
+                <li>Server Status, Social Links</li>
+            </ul>
+
+            <h2 id="plugins">Plugins</h2>
+            <p>Erweiterungen mit konfigurierbarer Reihenfolge. Unter <strong>Plugins</strong> im Admin aktivieren und konfigurieren.</p>
+            <ul>
+                <li><strong>SEO Meta</strong> – Meta-Tags, Open Graph</li>
+                <li><strong>Analytics</strong> – Tracking-Code einbinden</li>
+                <li><strong>Maintenance</strong> – Wartungsmodus</li>
+                <li><strong>Donation</strong> – Spenden-Button/Link</li>
+                <li><strong>Discord Embed</strong> – Discord-Widget</li>
+                <li><strong>Twitch Embed</strong> – Twitch-Stream</li>
+                <li><strong>Event Reminder</strong> – Nächste Events</li>
+                <li><strong>Cookie Consent</strong> – Cookie-Banner</li>
+                <li><strong>Custom CSS</strong> – Eigenes CSS</li>
+                <li><strong>Partner Slider</strong> – Partner-Karussell</li>
+                <li><strong>Backup Reminder</strong> – Backup-Hinweis</li>
+            </ul>
+
+            <h2 id="bereiche">Alle Frontend-Bereiche</h2>
+            <table>
+                <thead>
+                    <tr><th>Route</th><th>Beschreibung</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><code class="inline-code">/</code></td><td>Startseite</td></tr>
+                    <tr><td><code class="inline-code">/news</code></td><td>News-Übersicht</td></tr>
+                    <tr><td><code class="inline-code">/roster</code></td><td>Mitgliederliste</td></tr>
+                    <tr><td><code class="inline-code">/calendar</code></td><td>Kalender</td></tr>
+                    <tr><td><code class="inline-code">/apply</code></td><td>Bewerbung</td></tr>
+                    <tr><td><code class="inline-code">/crafting</code></td><td>Crafting & Aufträge</td></tr>
+                    <tr><td><code class="inline-code">/forum</code></td><td>Forum</td></tr>
+                    <tr><td><code class="inline-code">/gallery</code></td><td>Galerie</td></tr>
+                    <tr><td><code class="inline-code">/downloads</code></td><td>Downloads</td></tr>
+                    <tr><td><code class="inline-code">/partners</code></td><td>Partner</td></tr>
+                    <tr><td><code class="inline-code">/polls</code></td><td>Umfragen</td></tr>
+                    <tr><td><code class="inline-code">/newsletter</code></td><td>Newsletter</td></tr>
+                    <tr><td><code class="inline-code">/wiki</code></td><td>Wiki</td></tr>
+                    <tr><td><code class="inline-code">/marketplace</code></td><td>Marketplace (Anzeigen)</td></tr>
+                    <tr><td><code class="inline-code">/jobs</code></td><td>Stellenangebote</td></tr>
+                    <tr><td><code class="inline-code">/clan/teams</code></td><td>Clan-Teams</td></tr>
+                    <tr><td><code class="inline-code">/clan/bank</code></td><td>Clan-Bank</td></tr>
+                    <tr><td><code class="inline-code">/clan/rules</code></td><td>Clan-Regeln</td></tr>
+                    <tr><td><code class="inline-code">/clan/leaderboard</code></td><td>Leaderboard</td></tr>
+                    <tr><td><code class="inline-code">/clan/documents</code></td><td>Clan-Dokumente</td></tr>
+                    <tr><td><code class="inline-code">/clan/feedback</code></td><td>Clan-Feedback</td></tr>
+                    <tr><td><code class="inline-code">/clan/announcements</code></td><td>Clan-Ankündigungen</td></tr>
+                    <tr><td><code class="inline-code">/clan/achievements</code></td><td>Clan-Achievements</td></tr>
+                    <tr><td><code class="inline-code">/usercp</code></td><td>User Control Panel (Profil, Einstellungen)</td></tr>
+                    <tr><td><code class="inline-code">/page/{slug}</code></td><td>Statische Seiten (Impressum, Datenschutz, AGB, Cookies)</td></tr>
+                </tbody>
+            </table>
+
+            <h2 id="discord">Discord-Bot</h2>
+            <div class="embed">
+                <div class="embed-title">Slash-Commands & Integration</div>
+                <div class="embed-desc">
+                    Der Discord-Bot (Node.js, Ordner <code class="inline-code">discord-bot/</code>) ergänzt ZerroCMS um Slash-Commands in Discord. 
+                    Shop-Angebote und Events werden automatisch von Laravel in Discord-Channels gepostet (Webhooks). 
+                    Der Bot wird nur für Slash-Commands und Spieler-Abfrage benötigt.
+                </div>
+                <div class="embed-field">
+                    <div class="embed-field-name">Slash-Commands</div>
+                    <div class="embed-field-value">
+                        <strong>/befehl run name:&lt;name&gt;</strong> – Führt einen auf der Website angelegten Quick-Befehl aus (z. B. <code class="inline-code">name:spitzhacke</code>).<br>
+                        <strong>/befehl list</strong> – Listet alle verfügbaren Quick-Befehle (nur für dich sichtbar).<br>
+                        <strong>/spieler</strong> – Zeigt deinen verknüpften Website-User (wenn Discord mit User verknüpft).
+                    </div>
+                </div>
+                <div class="embed-field">
+                    <div class="embed-field-name">Automatische Posts (ohne Bot)</div>
+                    <div class="embed-field-value">
+                        <strong>Neue Marketplace-Anzeige</strong> → Post im Shop-Channel (Webhook <code class="inline-code">DISCORD_SHOP_WEBHOOK_URL</code>).<br>
+                        <strong>Neues/geändertes Event</strong> → Post im Events-Channel (Webhook <code class="inline-code">DISCORD_EVENTS_WEBHOOK_URL</code>).
+                    </div>
+                </div>
+                <div class="embed-field">
+                    <div class="embed-field-name">Bot starten</div>
+                    <div class="embed-field-value">
+                        <code class="inline-code">cd discord-bot</code> → <code class="inline-code">cp .env.example .env</code> → .env anpassen (DISCORD_BOT_TOKEN, LARAVEL_API_URL, DISCORD_BOT_API_KEY) → <code class="inline-code">npm install && npm start</code>
+                    </div>
+                </div>
+            </div>
+
+            <h2 id="anforderungen">Anforderungen</h2>
+            <ul>
+                <li>PHP 8.2+</li>
+                <li>Composer</li>
+                <li>MySQL/MariaDB</li>
+                <li>PHP-Extensions: pdo, pdo_mysql, mbstring, openssl, tokenizer, xml, ctype, json, bcmath, fileinfo</li>
+                <li>Optional: Node.js/npm für Frontend-Build (sonst CDN-Fallback)</li>
+            </ul>
+
+            <h2 id="hosting">Hosting & Deployment</h2>
+            <ul>
+                <li><strong>Document Root</strong> auf <code class="inline-code">public/</code> zeigen</li>
+                <li><strong>Queue</strong>: <code class="inline-code">QUEUE_CONNECTION=sync</code> falls kein Redis/Cron</li>
+                <li><strong>Produktion</strong>: <code class="inline-code">npm run build</code>, <code class="inline-code">php artisan config:cache</code></li>
+                <li><strong>Status-Check</strong>: <code class="inline-code">GET /status</code> liefert JSON mit ok, database, installed</li>
+            </ul>
+            <p>Ausführliche Plesk-Anleitung: <code class="inline-code">plesk.README.md</code></p>
+
+            <div class="embed" style="margin-top:48px;border-left-color:var(--success);">
+                <div class="embed-title">Lizenz</div>
+                <div class="embed-desc">ZerroCMS – MIT Lizenz.</div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

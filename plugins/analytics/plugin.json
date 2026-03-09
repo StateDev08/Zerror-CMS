@@ -1,0 +1,10 @@
+{
+    "name": "analytics",
+    "version": "1.0.0",
+    "description": "Analytics-Integration (z. B. Google Analytics).",
+    "provider": "App\\Providers\\AnalyticsPluginServiceProvider",
+    "configSchema": [
+        {"key": "tracking_id", "type": "text", "label": "Tracking-ID (z. B. GA4)", "default": ""},
+        {"key": "enabled", "type": "boolean", "label": "Aktiv", "default": false}
+    ]
+}
