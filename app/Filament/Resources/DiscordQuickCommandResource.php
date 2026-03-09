@@ -4,7 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Models\DiscordQuickCommand;
 use Filament\Resources\Resource;
-use Filament\Schemas\Schema;
+use Filament\Forms\Form;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -18,7 +18,7 @@ class DiscordQuickCommandResource extends Resource
 {
     protected static ?string $model = DiscordQuickCommand::class;
 
-    protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-command-line';
+    protected static ?string $navigationIcon = 'heroicon-o-command-line';
 
     protected static ?string $navigationLabel = 'Discord Quick-Befehle';
 
@@ -26,37 +26,30 @@ class DiscordQuickCommandResource extends Resource
 
     protected static ?string $pluralModelLabel = 'Quick-Befehle';
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-    protected static \UnitEnum|string|null $navigationGroup = 'Discord';
-=======
     protected static UnitEnum|string|null $navigationGroup = 'Discord';
->>>>>>> ac0c745ea5a920cf8bedb7863dad091fceff6b77
-=======
-    protected static UnitEnum|string|null $navigationGroup = 'Discord';
->>>>>>> ac0c745ea5a920cf8bedb7863dad091fceff6b77
 
-    public static function form(Schema $schema): Schema
+    public static function form(Form $form): Form
     {
-        return $schema->components([
-            TextInput::make('name')
-                ->required()
-                ->maxLength(32)
-                ->helperText('Nur Kleinbuchstaben, Zahlen, Unterstriche (z. B. spitzhacke). Wird zum Slash-Befehl /<name>.')
-                ->afterStateUpdated(fn ($state, $set) => $set('name', DiscordQuickCommand::normalizeName($state ?? ''))),
-            TextInput::make('description')
-                ->maxLength(100)
-                ->helperText('Kurzbeschreibung in Discord (optional).'),
-            Textarea::make('response_text')
-                ->required()
-                ->rows(4)
-                ->helperText('Diese Nachricht antwortet der Bot, wenn jemand den Befehl nutzt.'),
-            Select::make('created_by')
-                ->relationship('creator', 'name')
-                ->nullable()
-                ->searchable(),
-            Toggle::make('is_public')->default(true)->label('Öffentlich (für alle nutzbar)'),
-        ]);
+        return $form
+            ->schema([
+                TextInput::make('name')
+                    ->required()
+                    ->maxLength(32)
+                    ->helperText('Nur Kleinbuchstaben, Zahlen, Unterstriche (z. B. spitzhacke). Wird zum Slash-Befehl /<name>.')
+                    ->afterStateUpdated(fn ($state, $set) => $set('name', DiscordQuickCommand::normalizeName($state ?? ''))),
+                TextInput::make('description')
+                    ->maxLength(100)
+                    ->helperText('Kurzbeschreibung in Discord (optional).'),
+                Textarea::make('response_text')
+                    ->required()
+                    ->rows(4)
+                    ->helperText('Diese Nachricht antwortet der Bot, wenn jemand den Befehl nutzt.'),
+                Select::make('created_by')
+                    ->relationship('creator', 'name')
+                    ->nullable()
+                    ->searchable(),
+                Toggle::make('is_public')->default(true)->label('Öffentlich (für alle nutzbar)'),
+            ]);
     }
 
     public static function table(Table $table): Table
