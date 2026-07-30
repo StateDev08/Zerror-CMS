@@ -3,7 +3,7 @@
 namespace App\Filament\Resources\ItemRequestResource\Pages;
 
 use App\Filament\Resources\ItemRequestResource;
-use Filament\Resources\Pages\EditRecord;
+use App\Filament\Resources\Pages\EditRecord;
 
 class EditItemRequest extends EditRecord
 {

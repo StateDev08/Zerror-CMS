@@ -1,0 +1,7 @@
+{
+  "name": "common",
+  "version": "1.0.0",
+  "parent": null,
+  "selectable": false,
+  "label": "Shared content views"
+}

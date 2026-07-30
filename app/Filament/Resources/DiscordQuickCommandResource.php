@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Forms\CmsRichEditor;
+
 use App\Models\DiscordQuickCommand;
 use BackedEnum;
 use Filament\Resources\Resource;
@@ -9,7 +11,6 @@ use Filament\Schemas\Schema;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\Select;
@@ -17,6 +18,8 @@ use UnitEnum;
 
 class DiscordQuickCommandResource extends Resource
 {
+    use \App\Filament\Concerns\ChecksCmsPermissions;
+
     protected static ?string $model = DiscordQuickCommand::class;
 
     protected static BackedEnum|string|null $navigationIcon = 'heroicon-o-command-line';
@@ -27,7 +30,9 @@ class DiscordQuickCommandResource extends Resource
 
     protected static ?string $pluralModelLabel = 'Quick-Befehle';
 
-    protected static UnitEnum|string|null $navigationGroup = 'Discord';
+    protected static UnitEnum|string|null $navigationGroup = 'Community';
+
+    protected static ?int $navigationSort = 50;
 
     public static function form(Schema $schema): Schema
     {
@@ -40,9 +45,9 @@ class DiscordQuickCommandResource extends Resource
             TextInput::make('description')
                 ->maxLength(100)
                 ->helperText('Kurzbeschreibung in Discord (optional).'),
-            Textarea::make('response_text')
+            CmsRichEditor::compact('response_text')
                 ->required()
-                ->rows(4)
+                
                 ->helperText('Diese Nachricht antwortet der Bot, wenn jemand den Befehl nutzt.'),
             Select::make('created_by')
                 ->relationship('creator', 'name')

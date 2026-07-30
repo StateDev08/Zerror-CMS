@@ -1,15 +1,27 @@
-<div class="widget widget-latest-news rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4">
-    <h3 class="font-semibold text-gray-900 dark:text-white mb-3">{{ __('widgets.latest_news') }}</h3>
+<div class="cms-widget cms-widget--news">
+    <header class="cms-widget__head">
+        <h3 class="cms-widget__title">{{ $title ?? __('widgets.latest_news') }}</h3>
+        @if($showAllLink ?? false)
+            <a href="{{ route('news.index') }}" class="cms-widget__more">{{ __('widgets.view_all') }}</a>
+        @endif
+    </header>
+
     @if($posts->isEmpty())
-        <p class="text-sm text-gray-500 dark:text-gray-400">{{ __('widgets.no_news') }}</p>
+        <p class="cms-widget__hint">{{ $emptyText ?? __('widgets.no_news') }}</p>
     @else
-        <ul class="space-y-2">
+        <ul class="cms-feed">
             @foreach($posts as $post)
                 <li>
-                    <a href="{{ route('news.show', $post->slug) }}" class="text-sm text-gray-700 dark:text-gray-300 hover:underline">
-                        {{ $post->title }}
+                    <a href="{{ route('news.show', $post->slug) }}" class="cms-feed__item">
+                        <span class="cms-feed__icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5h12a2 2 0 0 1 2 2v12H6a2 2 0 0 1-2-2V5z"/><path d="M8 9h8M8 13h6"/></svg>
+                        </span>
+                        <span class="cms-feed__body">
+                            <span class="cms-feed__title">{{ $post->title }}</span>
+                            <span class="cms-feed__meta">{{ $post->created_at?->format(__('general.date_format')) }}</span>
+                        </span>
+                        <span class="cms-feed__chevron" aria-hidden="true">›</span>
                     </a>
-                    <span class="text-xs text-gray-500 dark:text-gray-400">{{ $post->created_at->format(__('general.date_format')) }}</span>
                 </li>
             @endforeach
         </ul>

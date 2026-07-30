@@ -1,0 +1,88 @@
+/* 7 Days to Die — Survival / rau / Postapo */
+
+.theme-seven-days {
+    --gs-radius: 0.2rem;
+    --gs-panel: color-mix(in srgb, var(--theme-surface) 90%, #000);
+    --gs-line: color-mix(in srgb, var(--theme-primary) 45%, #5a3a2a);
+    font-family: 'Share Tech Mono', ui-monospace, monospace;
+    background:
+        radial-gradient(ellipse 90% 50% at 50% 120%, color-mix(in srgb, var(--theme-primary) 18%, transparent), transparent 55%),
+        linear-gradient(180deg, #120e0c, var(--theme-bg) 40%, #0a0807);
+}
+
+.theme-seven-days .font-display {
+    font-family: 'Oswald', system-ui, sans-serif;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.theme-seven-days .gs-top {
+    border-bottom: 2px solid color-mix(in srgb, var(--theme-primary) 70%, #3a2018);
+    background: linear-gradient(180deg, #1a1210, #100c0a);
+    box-shadow: 0 8px 24px rgba(0,0,0,.5);
+}
+
+.theme-seven-days .top-nav a {
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--theme-muted) 70%, var(--theme-primary));
+}
+.theme-seven-days .top-nav a:hover,
+.theme-seven-days .top-nav a[aria-current="page"] {
+    color: var(--theme-primary);
+    text-shadow: 0 0 12px color-mix(in srgb, var(--theme-primary) 40%, transparent);
+}
+
+.theme-seven-days .gs-hero {
+    border-radius: 0.15rem;
+    border: 2px solid color-mix(in srgb, var(--theme-primary) 50%, #2a1810);
+    box-shadow:
+        inset 0 0 40px rgba(0,0,0,.35),
+        0 14px 36px rgba(0,0,0,.55);
+    filter: contrast(1.05) saturate(0.92);
+}
+
+.theme-seven-days .gs-panel,
+.theme-seven-days .cms-widget,
+.theme-seven-days .auth-card {
+    border-radius: 0.15rem !important;
+    border: 1px solid color-mix(in srgb, var(--theme-primary) 35%, #4a3020) !important;
+    background:
+        linear-gradient(160deg, color-mix(in srgb, var(--theme-surface) 92%, #3a2010), var(--theme-surface)) !important;
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.04),
+        0 12px 28px rgba(0,0,0,.45) !important;
+}
+
+.theme-seven-days .cms-widget__title {
+    font-family: 'Oswald', sans-serif;
+    color: var(--theme-primary) !important;
+    letter-spacing: 0.16em;
+}
+
+.theme-seven-days .cms-widget__cta,
+.theme-seven-days .theme-bg-primary,
+.theme-seven-days .auth-card__submit {
+    border-radius: 0.1rem !important;
+    background: linear-gradient(180deg, color-mix(in srgb, var(--theme-primary) 70%, #fff), var(--theme-primary)) !important;
+    color: #1a0c08 !important;
+    font-family: 'Oswald', sans-serif;
+    letter-spacing: 0.12em;
+    border: 1px solid #2a1008 !important;
+}
+
+.theme-seven-days .auth-card__input {
+    border-radius: 0.1rem !important;
+    border: 1px solid color-mix(in srgb, var(--theme-primary) 35%, transparent) !important;
+    background: #120e0c !important;
+    font-family: 'Share Tech Mono', monospace;
+}
+
+.theme-seven-days .gs-footer {
+    border-top: 2px solid color-mix(in srgb, var(--theme-primary) 55%, #2a1810);
+    background: #0a0807;
+    color: var(--theme-muted);
+}

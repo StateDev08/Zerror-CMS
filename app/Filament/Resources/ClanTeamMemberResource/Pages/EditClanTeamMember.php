@@ -3,7 +3,7 @@
 namespace App\Filament\Resources\ClanTeamMemberResource\Pages;
 
 use App\Filament\Resources\ClanTeamMemberResource;
-use Filament\Resources\Pages\EditRecord;
+use App\Filament\Resources\Pages\EditRecord;
 
 class EditClanTeamMember extends EditRecord
 {

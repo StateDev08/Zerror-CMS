@@ -3,7 +3,7 @@
 namespace App\Filament\Resources\GalleryImageResource\Pages;
 
 use App\Filament\Resources\GalleryImageResource;
-use Filament\Resources\Pages\EditRecord;
+use App\Filament\Resources\Pages\EditRecord;
 
 class EditGalleryImage extends EditRecord
 {

@@ -1,0 +1,7 @@
+{
+    "id": "example",
+    "name": "Example Widget",
+    "version": "1.0.0",
+    "description": "Beispiel-Widget für den ZIP-Installer. Zeigt einen kurzen Hinweistext.",
+    "slots": ["left", "right"]
+}

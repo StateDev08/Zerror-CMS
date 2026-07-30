@@ -4,7 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Models\WikiArticle;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Textarea;
+use App\Filament\Forms\CmsRichEditor;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
@@ -16,13 +16,17 @@ use Illuminate\Support\Str;
 
 class WikiArticleResource extends Resource
 {
+    use \App\Filament\Concerns\ChecksCmsPermissions;
+
     protected static ?string $model = WikiArticle::class;
 
     protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-document-text';
 
     protected static ?string $navigationLabel = 'Wiki-Artikel';
 
-    protected static \UnitEnum|string|null $navigationGroup = 'Wiki';
+    protected static \UnitEnum|string|null $navigationGroup = 'Community';
+
+    protected static ?int $navigationSort = 25;
 
     public static function form(Schema $schema): Schema
     {
@@ -30,7 +34,7 @@ class WikiArticleResource extends Resource
             Select::make('category_id')->relationship('category', 'name')->nullable(),
             TextInput::make('title')->required()->live(onBlur: true)->afterStateUpdated(fn ($state, $set) => $set('slug', Str::slug($state))),
             TextInput::make('slug')->required(),
-            Textarea::make('body')->required()->rows(12)->columnSpanFull(),
+            CmsRichEditor::make('body')->required(),
             Toggle::make('published')->default(true),
             TextInput::make('order')->numeric()->default(0),
         ]);

@@ -3,7 +3,7 @@
 namespace App\Filament\Resources\ClanBankCategoryResource\Pages;
 
 use App\Filament\Resources\ClanBankCategoryResource;
-use Filament\Resources\Pages\EditRecord;
+use App\Filament\Resources\Pages\EditRecord;
 
 class EditClanBankCategory extends EditRecord
 {

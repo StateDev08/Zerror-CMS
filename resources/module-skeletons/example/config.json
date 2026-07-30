@@ -1,0 +1,16 @@
+[
+    {
+        "key": "title",
+        "type": "text",
+        "label": "Titel",
+        "default": "Example Module",
+        "help": "Überschrift der Sidebar-Box."
+    },
+    {
+        "key": "text",
+        "type": "text",
+        "label": "Text",
+        "default": "Dieses Modul wurde per ZIP installiert.",
+        "help": "Kurzer Hinweistext."
+    }
+]

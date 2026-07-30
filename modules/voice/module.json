@@ -1,0 +1,6 @@
+{
+    "id": "voice",
+    "name": "Voice",
+    "version": "1.0.0",
+    "description": "Ein Voice-Widget für TeamSpeak, Mumble oder generische Connect-Links."
+}

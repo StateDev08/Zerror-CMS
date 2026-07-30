@@ -12,6 +12,8 @@ use Filament\Tables\Table;
 
 class ClanTeamMemberResource extends Resource
 {
+    use \App\Filament\Concerns\ChecksCmsPermissions;
+
     protected static ?string $model = ClanTeamMember::class;
 
     protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-user-plus';
@@ -19,6 +21,8 @@ class ClanTeamMemberResource extends Resource
     protected static ?string $navigationLabel = 'Team-Mitglieder';
 
     protected static \UnitEnum|string|null $navigationGroup = 'Clan';
+
+    protected static ?int $navigationSort = 35;
 
     public static function form(Schema $schema): Schema
     {

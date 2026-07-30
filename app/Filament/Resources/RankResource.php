@@ -12,6 +12,8 @@ use Illuminate\Support\Str;
 
 class RankResource extends Resource
 {
+    use \App\Filament\Concerns\ChecksCmsPermissions;
+
     protected static ?string $model = Rank::class;
 
     protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-academic-cap';
@@ -19,6 +21,8 @@ class RankResource extends Resource
     protected static ?string $navigationLabel = 'Ränge';
 
     protected static \UnitEnum|string|null $navigationGroup = 'Clan';
+
+    protected static ?int $navigationSort = 20;
 
     public static function form(Schema $schema): Schema
     {

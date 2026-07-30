@@ -2,9 +2,10 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Forms\CmsRichEditor;
+
 use App\Models\ForumForum;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -14,6 +15,8 @@ use Illuminate\Support\Str;
 
 class ForumForumResource extends Resource
 {
+    use \App\Filament\Concerns\ChecksCmsPermissions;
+
     protected static ?string $model = ForumForum::class;
 
     protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-chat-bubble-bottom-center-text';
@@ -28,10 +31,22 @@ class ForumForumResource extends Resource
             Select::make('category_id')->relationship('category', 'name')->required(),
             TextInput::make('name')->required()->live(onBlur: true)->afterStateUpdated(fn ($state, $set) => $set('slug', Str::slug($state))),
             TextInput::make('slug')->required(),
-            Textarea::make('description')->nullable()->rows(3),
+            CmsRichEditor::compact('description')->nullable(),
             TextInput::make('order')->numeric()->default(0),
-            Select::make('read_rank_id')->relationship('readRank', 'name')->label('Lese-Berechtigung (Rang)')->nullable(),
-            Select::make('write_rank_id')->relationship('writeRank', 'name')->label('Schreib-Berechtigung (Rang)')->nullable(),
+            Select::make('read_rank_id')
+                ->relationship('readRank', 'name')
+                ->label('Lese-Berechtigung (Rang)')
+                ->helperText('Leer = öffentlich. Sonst mindestens dieser Rang (Clan → Ränge).')
+                ->searchable()
+                ->preload()
+                ->nullable(),
+            Select::make('write_rank_id')
+                ->relationship('writeRank', 'name')
+                ->label('Schreib-Berechtigung (Rang)')
+                ->helperText('Leer = alle eingeloggten User. Sonst mindestens dieser Rang.')
+                ->searchable()
+                ->preload()
+                ->nullable(),
         ]);
     }
 

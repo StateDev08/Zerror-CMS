@@ -12,13 +12,17 @@ use Illuminate\Support\Str;
 
 class MarketplaceCategoryResource extends Resource
 {
+    use \App\Filament\Concerns\ChecksCmsPermissions;
+
     protected static ?string $model = MarketplaceCategory::class;
 
     protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-tag';
 
-    protected static ?string $navigationLabel = 'Kategorien';
+    protected static ?string $navigationLabel = 'Markt-Kategorien';
 
-    protected static \UnitEnum|string|null $navigationGroup = 'Game Marketplace';
+    protected static \UnitEnum|string|null $navigationGroup = 'Markt & Jobs';
+
+    protected static ?int $navigationSort = 10;
 
     public static function form(Schema $schema): Schema
     {

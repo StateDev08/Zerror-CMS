@@ -4,7 +4,7 @@ namespace App\Filament\Resources\DiscordQuickCommandResource\Pages;
 
 use App\Filament\Resources\DiscordQuickCommandResource;
 use App\Models\DiscordQuickCommand;
-use Filament\Resources\Pages\EditRecord;
+use App\Filament\Resources\Pages\EditRecord;
 
 class EditDiscordQuickCommand extends EditRecord
 {

@@ -17,7 +17,19 @@ class WidgetRenderer
         if (! Schema::hasTable('widget_instances')) {
             return '';
         }
-        $instances = WidgetInstance::where('slot', $slot)->orderBy('order')->get();
+
+        $keys = match ($slot) {
+            'right' => ['right', 'sidebar'],
+            'left' => ['left', 'home'],
+            default => [$slot],
+        };
+
+        $instances = WidgetInstance::query()
+            ->whereIn('slot', $keys)
+            ->orderBy('order')
+            ->orderBy('id')
+            ->get();
+
         $html = '';
         foreach ($instances as $instance) {
             $widget = $this->registry->get($instance->widget_key);
@@ -29,9 +41,14 @@ class WidgetRenderer
                 $html .= is_string($rendered) ? $rendered : '';
             } catch (\Throwable $e) {
                 report($e);
-                // Widget render failed → log and continue so page still renders
             }
         }
+
         return $html;
+    }
+
+    public function hasContent(string $slot): bool
+    {
+        return trim(strip_tags($this->slot($slot))) !== '';
     }
 }

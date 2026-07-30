@@ -1,0 +1,16 @@
+{
+    "name": "example",
+    "version": "1.0.0",
+    "parent": "common",
+    "selectable": true,
+    "label": "Example Theme",
+    "description": "Starter-Theme zum Anpassen. Zip hochladen unter System → Themes.",
+    "colors": {
+        "primary": "#e8b86d",
+        "accent": "#3d7ea6",
+        "background": "#0c1014",
+        "surface": "#151b22",
+        "text": "#eef2f6",
+        "text_muted": "#93a4b5"
+    }
+}

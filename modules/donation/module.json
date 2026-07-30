@@ -1,0 +1,6 @@
+{
+    "id": "donation",
+    "name": "Spenden",
+    "version": "1.0.0",
+    "description": "Spenden-Box mit URL aus Modul-Config oder Einstellungen."
+}

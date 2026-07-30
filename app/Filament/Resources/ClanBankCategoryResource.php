@@ -12,13 +12,17 @@ use Illuminate\Support\Str;
 
 class ClanBankCategoryResource extends Resource
 {
+    use \App\Filament\Concerns\ChecksCmsPermissions;
+
     protected static ?string $model = ClanBankCategory::class;
 
     protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-archive-box';
 
     protected static ?string $navigationLabel = 'Bank-Kategorien';
 
-    protected static \UnitEnum|string|null $navigationGroup = 'Clan Bank';
+    protected static \UnitEnum|string|null $navigationGroup = 'Clan';
+
+    protected static ?int $navigationSort = 80;
 
     public static function form(Schema $schema): Schema
     {

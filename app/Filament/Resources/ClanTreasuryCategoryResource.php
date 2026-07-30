@@ -11,13 +11,17 @@ use Filament\Tables\Table;
 
 class ClanTreasuryCategoryResource extends Resource
 {
+    use \App\Filament\Concerns\ChecksCmsPermissions;
+
     protected static ?string $model = ClanTreasuryCategory::class;
 
     protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-tag';
 
     protected static ?string $navigationLabel = 'Kassen-Kategorien';
 
-    protected static \UnitEnum|string|null $navigationGroup = 'Clan Kasse';
+    protected static \UnitEnum|string|null $navigationGroup = 'Clan';
+
+    protected static ?int $navigationSort = 90;
 
     public static function form(Schema $schema): Schema
     {

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\CraftableItem;
 use App\Models\ItemRequest;
+use App\Support\HtmlContent;
 use Illuminate\Http\Request;
 
 class CraftingController extends Controller
@@ -32,7 +33,7 @@ class CraftingController extends Controller
     {
         $request->validate([
             'craftable_item_id' => ['nullable', 'exists:craftable_items,id'],
-            'custom_request' => ['nullable', 'string', 'max:5000'],
+            'custom_request' => ['nullable', 'string', 'max:50000'],
             'max_price' => ['nullable', 'numeric', 'min:0'],
             'desired_date' => ['nullable', 'date'],
             'priority' => ['nullable', 'string', 'in:low,normal,high'],
@@ -46,14 +47,16 @@ class CraftingController extends Controller
             'quantity' => __('crafting.quantity'),
         ]);
 
-        if (empty($request->craftable_item_id) && trim((string) $request->custom_request) === '') {
+        $customRequest = HtmlContent::sanitizeOptional($request->input('custom_request'));
+
+        if (empty($request->craftable_item_id) && $customRequest === null) {
             return back()->withErrors(['craftable_item_id' => __('crafting.choose_item_or_text')])->withInput();
         }
 
         ItemRequest::create([
             'user_id' => $request->user()->id,
             'craftable_item_id' => $request->craftable_item_id ?: null,
-            'custom_request' => trim((string) $request->custom_request) ?: null,
+            'custom_request' => $customRequest,
             'max_price' => $request->filled('max_price') ? $request->max_price : null,
             'desired_date' => $request->filled('desired_date') ? $request->desired_date : null,
             'priority' => $request->input('priority', ItemRequest::PRIORITY_NORMAL),

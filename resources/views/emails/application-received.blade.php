@@ -4,7 +4,7 @@
 {{ __('apply.email') }}: {{ $application->email }}
 {{ __('apply.message') }}:
 
-{{ $application->message }}
+{{ trim(html_entity_decode(strip_tags($application->message), ENT_QUOTES | ENT_HTML5, 'UTF-8')) }}
 
 ---
-{{ config('clan.name') }}
+{{ site_name() }}

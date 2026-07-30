@@ -2,7 +2,7 @@
 
 return [
     'name' => env('CLAN_NAME', 'ZerroCMS'),
-    'theme' => env('CLAN_THEME', 'default'),
+    'theme' => env('CLAN_THEME', 'pax-dei'),
     'logo' => env('CLAN_LOGO'),
     'banner' => env('CLAN_BANNER'),
     'discord_webhook_url' => env('DISCORD_WEBHOOK_URL'),

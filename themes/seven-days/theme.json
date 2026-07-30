@@ -1,0 +1,16 @@
+{
+    "name": "seven-days",
+    "version": "1.0.0",
+    "parent": "common",
+    "selectable": true,
+    "label": "7 Days to Die",
+    "description": "Apokalypse, Rost und Blut – Base halten bis Tag 7.",
+    "colors": {
+        "primary": "#c44b2b",
+        "accent": "#8b9a6b",
+        "background": "#0e0b0a",
+        "surface": "#1a1412",
+        "text": "#f2e8e0",
+        "text_muted": "#b5a396"
+    }
+}

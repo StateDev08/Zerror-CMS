@@ -1,0 +1,6 @@
+{
+    "id": "visitor_counter",
+    "name": "Besucherzähler",
+    "version": "1.0.0",
+    "description": "Persistenter Besucherzähler im Footer (Session-basiert oder pro Seitenaufruf)."
+}

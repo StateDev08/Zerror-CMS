@@ -11,7 +11,9 @@ use Spatie\Permission\PermissionRegistrar;
 class RolePermissionSeeder extends Seeder
 {
     /**
-     * Liste der Tabellen/Resources, für die Standard-Berechtigungen angelegt werden.
+     * Alle CMS-Ressourcen / Tabellen für CRUD-Rechte.
+     *
+     * @var list<string>
      */
     protected array $resourceTables = [
         'users', 'roles', 'permissions',
@@ -22,14 +24,34 @@ class RolePermissionSeeder extends Seeder
         'clan_feedback', 'clan_leaderboard_categories', 'clan_leaderboard_entries',
         'clan_treasury_categories', 'clan_treasury_entries', 'clan_bank_categories',
         'clan_bank_items', 'marketplace_categories', 'marketplace_listings',
-        'job_offer_categories', 'job_offers', 'wiki_categories', 'wiki_articles',
-        'gallery_albums', 'gallery_images', 'download_categories', 'downloads',
-        'partners', 'polls', 'newsletter_subscribers', 'slider_slides',
-        'media', 'translations', 'user_notifications',
-        'craftable_items', 'item_requests',
+        'job_offer_categories', 'job_offers', 'job_applications',
+        'wiki_categories', 'wiki_articles', 'gallery_albums', 'gallery_images',
+        'download_categories', 'downloads', 'partners', 'polls',
+        'newsletter_subscribers', 'slider_slides', 'music_tracks', 'media', 'translations',
+        'user_notifications', 'craftable_items', 'item_requests',
+        'menu_items', 'discord_quick_commands', 'cms_pages',
     ];
 
-    protected array $abilities = ['view_any', 'view', 'create', 'update', 'delete', 'delete_any', 'restore', 'restore_any', 'reorder', 'force_delete', 'force_delete_any', 'replicate'];
+    /**
+     * Extra-Rechte für Custom-Pages / Systembereiche.
+     *
+     * @var list<string>
+     */
+    protected array $pagePermissions = [
+        'access_admin',
+        'manage_settings',
+        'manage_modules',
+        'manage_plugins',
+        'manage_system_modules',
+        'manage_themes',
+        'manage_theme_editor',
+        'send_newsletter',
+    ];
+
+    protected array $abilities = [
+        'view_any', 'view', 'create', 'update', 'delete', 'delete_any',
+        'restore', 'restore_any', 'reorder', 'force_delete', 'force_delete_any', 'replicate',
+    ];
 
     public function run(): void
     {
@@ -37,27 +59,82 @@ class RolePermissionSeeder extends Seeder
 
         $guard = 'web';
 
-        // Einzelberechtigung für Admin-Zugang
-        Permission::firstOrCreate(['name' => 'access_admin', 'guard_name' => $guard]);
+        foreach ($this->pagePermissions as $name) {
+            Permission::firstOrCreate(['name' => $name, 'guard_name' => $guard]);
+        }
 
-        // Berechtigungen pro Resource
         foreach ($this->resourceTables as $table) {
             $label = str_replace('_', ' ', $table);
             foreach ($this->abilities as $ability) {
-                $name = $ability . ' ' . $label;
-                Permission::firstOrCreate(['name' => $name, 'guard_name' => $guard]);
+                Permission::firstOrCreate([
+                    'name' => $ability.' '.$label,
+                    'guard_name' => $guard,
+                ]);
             }
         }
 
-        // Rolle Super-Admin mit allen Rechten
-        $superAdmin = Role::firstOrCreate(['name' => 'super-admin', 'guard_name' => $guard]);
-        $superAdmin->givePermissionTo(Permission::all());
+        $all = Permission::query()->where('guard_name', $guard)->get();
 
-        // Rolle Member für registrierte Frontend-User (keine Admin-Rechte)
+        $superAdmin = Role::firstOrCreate(['name' => 'super-admin', 'guard_name' => $guard]);
+        $superAdmin->syncPermissions($all);
+
+        $admin = Role::firstOrCreate(['name' => 'admin', 'guard_name' => $guard]);
+        $admin->syncPermissions(
+            $all->filter(fn (Permission $p) => ! in_array($p->name, [
+                // Rechteverwaltung bleibt Super-Admin
+            ], true) && ! str_starts_with($p->name, 'force_delete')
+                && ! str_contains($p->name, ' roles')
+                && ! str_contains($p->name, ' permissions')
+                && $p->name !== 'manage_modules'
+                && $p->name !== 'manage_plugins')
+        );
+
+        $moderator = Role::firstOrCreate(['name' => 'moderator', 'guard_name' => $guard]);
+        $moderator->syncPermissions(
+            $all->filter(function (Permission $p) {
+                $name = $p->name;
+                if ($name === 'access_admin') {
+                    return true;
+                }
+                foreach ([
+                    'applications', 'forum categories', 'forum forums', 'clan feedback',
+                    'posts', 'events', 'user notifications', 'polls',
+                ] as $area) {
+                    if (str_contains($name, $area)) {
+                        return ! str_starts_with($name, 'force_delete');
+                    }
+                }
+
+                return false;
+            })
+        );
+
+        $editor = Role::firstOrCreate(['name' => 'editor', 'guard_name' => $guard]);
+        $editor->syncPermissions(
+            $all->filter(function (Permission $p) {
+                $name = $p->name;
+                if ($name === 'access_admin') {
+                    return true;
+                }
+                foreach ([
+                    'posts', 'cms pages', 'events', 'wiki categories', 'wiki articles',
+                    'slider slides', 'partners', 'media', 'gallery albums', 'gallery images',
+                    'download categories', 'downloads', 'menu items',
+                ] as $area) {
+                    if (str_contains($name, $area)) {
+                        return in_array(explode(' ', $name, 2)[0], [
+                            'view_any', 'view', 'create', 'update', 'reorder', 'replicate',
+                        ], true);
+                    }
+                }
+
+                return false;
+            })
+        );
+
         Role::firstOrCreate(['name' => 'member', 'guard_name' => $guard]);
 
-        // Optional: Erstem User Super-Admin zuweisen
-        $firstUser = User::first();
+        $firstUser = User::query()->orderBy('id')->first();
         if ($firstUser && ! $firstUser->hasRole('super-admin')) {
             $firstUser->assignRole('super-admin');
         }

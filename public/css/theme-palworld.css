@@ -1,0 +1,81 @@
+/* Palworld — weich, freundlich, Creature-Sci-Fi */
+
+.theme-palworld {
+    --gs-radius: 1.15rem;
+    --gs-panel: color-mix(in srgb, var(--theme-surface) 90%, #fff);
+    --gs-line: color-mix(in srgb, var(--theme-primary) 35%, transparent);
+    font-family: 'Nunito', system-ui, sans-serif;
+    background:
+        radial-gradient(ellipse 80% 50% at 20% -10%, color-mix(in srgb, var(--theme-primary) 28%, transparent), transparent 55%),
+        radial-gradient(ellipse 60% 40% at 100% 10%, color-mix(in srgb, var(--theme-accent) 22%, transparent), transparent 50%),
+        var(--theme-bg);
+}
+
+.theme-palworld .font-display {
+    font-family: 'Nunito', system-ui, sans-serif;
+    font-weight: 800;
+}
+
+.theme-palworld .gs-top {
+    border-bottom: 0;
+    background: color-mix(in srgb, var(--theme-surface) 75%, transparent);
+    box-shadow: 0 10px 30px rgba(0,0,0,.25);
+    border-radius: 0 0 1.5rem 1.5rem;
+}
+
+.theme-palworld .top-nav a {
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: color-mix(in srgb, var(--theme-primary) 70%, #fff);
+    padding: 0.35rem 0.65rem;
+    border-radius: 999px;
+    transition: background .2s, color .2s;
+}
+.theme-palworld .top-nav a:hover,
+.theme-palworld .top-nav a[aria-current="page"] {
+    background: color-mix(in srgb, var(--theme-primary) 22%, transparent);
+    color: #fff;
+}
+
+.theme-palworld .gs-hero {
+    border-radius: 1.5rem;
+    border: 2px solid color-mix(in srgb, var(--theme-primary) 40%, transparent);
+    box-shadow: 0 18px 40px rgba(0,0,0,.3), 0 0 40px color-mix(in srgb, var(--theme-primary) 15%, transparent);
+}
+
+.theme-palworld .gs-panel,
+.theme-palworld .cms-widget,
+.theme-palworld .auth-card {
+    border-radius: 1.25rem !important;
+    border: 2px solid color-mix(in srgb, var(--theme-primary) 28%, transparent) !important;
+    background: color-mix(in srgb, var(--theme-surface) 88%, #fff) !important;
+    box-shadow: 0 14px 36px rgba(0,0,0,.22) !important;
+}
+
+.theme-palworld .cms-widget__title {
+    color: var(--theme-primary) !important;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+}
+
+.theme-palworld .cms-widget__cta,
+.theme-palworld .theme-bg-primary,
+.theme-palworld .auth-card__submit {
+    border-radius: 999px !important;
+    background: linear-gradient(135deg, var(--theme-primary), var(--theme-accent)) !important;
+    color: #062033 !important;
+    font-weight: 800;
+    box-shadow: 0 8px 20px color-mix(in srgb, var(--theme-primary) 35%, transparent) !important;
+}
+
+.theme-palworld .auth-card__input {
+    border-radius: 999px !important;
+    border: 2px solid color-mix(in srgb, var(--theme-primary) 30%, transparent) !important;
+    background: color-mix(in srgb, var(--theme-bg) 70%, #fff) !important;
+}
+
+.theme-palworld .gs-footer {
+    border: 0;
+    border-radius: 1.5rem 1.5rem 0 0;
+    background: color-mix(in srgb, var(--theme-surface) 80%, transparent);
+}

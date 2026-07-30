@@ -2,8 +2,27 @@
 
 namespace App\Support;
 
+use Illuminate\Support\HtmlString;
+
 class ForumFormat
 {
+    /**
+     * Beiträge als sicheres HTML ausgeben (Rich-Editor + Legacy-[quote]).
+     */
+    public static function bodyToHtml(string $body): HtmlString
+    {
+        $body = trim($body);
+        if ($body === '') {
+            return new HtmlString('');
+        }
+
+        if (preg_match('/\[quote\s+author=/i', $body)) {
+            return new HtmlString(self::quoteToHtml($body));
+        }
+
+        return HtmlContent::toHtml($body);
+    }
+
     /**
      * Convert [quote author="..."]...[/quote] to <blockquote> and escape the rest.
      */

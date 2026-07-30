@@ -18,7 +18,18 @@ class NewsletterController extends Controller
         NewsletterSubscriber::create([
             'email' => $validated['email'],
             'token' => Str::random(32),
+            'confirmed_at' => now(),
         ]);
         return redirect()->back()->with('newsletter_status', 'subscribed');
+    }
+
+    public function unsubscribe(string $token)
+    {
+        $subscriber = NewsletterSubscriber::where('token', $token)->first();
+        if ($subscriber) {
+            $subscriber->delete();
+        }
+
+        return view('theme::newsletter.unsubscribed');
     }
 }

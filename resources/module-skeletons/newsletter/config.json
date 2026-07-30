@@ -1,0 +1,6 @@
+[
+    {"key": "title", "type": "text", "label": "Titel", "default": "Newsletter"},
+    {"key": "intro", "type": "textarea", "label": "Intro-Text", "default": "Neuigkeiten per E-Mail – jederzeit abmeldbar."},
+    {"key": "button_text", "type": "text", "label": "Button", "default": "Anmelden"},
+    {"key": "show_page_link", "type": "boolean", "label": "Link zur Anmeldeseite", "default": true}
+]

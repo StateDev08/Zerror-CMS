@@ -19,3 +19,13 @@
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
 </IfModule>
+
+# Upload-Limits (Apache mod_php – wirkt ohne Service-Neustart)
+<IfModule php_module>
+    php_value upload_max_filesize 64M
+    php_value post_max_size 64M
+</IfModule>
+<IfModule mod_php.c>
+    php_value upload_max_filesize 64M
+    php_value post_max_size 64M
+</IfModule>

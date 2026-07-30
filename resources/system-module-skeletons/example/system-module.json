@@ -1,0 +1,6 @@
+{
+    "id": "example",
+    "name": "Beispiel System-Modul",
+    "version": "1.0.0",
+    "description": "Minimal-Vorlage für System-Module (Routes/Views im Provider registrieren)."
+}

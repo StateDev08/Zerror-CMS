@@ -3,7 +3,7 @@
 namespace App\Filament\Resources\MarketplaceCategoryResource\Pages;
 
 use App\Filament\Resources\MarketplaceCategoryResource;
-use Filament\Resources\Pages\EditRecord;
+use App\Filament\Resources\Pages\EditRecord;
 
 class EditMarketplaceCategory extends EditRecord
 {

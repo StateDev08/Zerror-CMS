@@ -1,0 +1,13 @@
+{
+    "name": "partners",
+    "label": "Partner-Slider",
+    "version": "1.0.0",
+    "description": "Partner-Logo-Slider aus dem Partner-ACP.",
+    "configSchema": [
+        {"key": "enabled", "type": "boolean", "label": "Widget aktiv", "default": true},
+        {"key": "title", "type": "text", "label": "Titel", "default": "Partner"},
+        {"key": "speed_ms", "type": "number", "label": "Geschwindigkeit (ms)", "default": 4000},
+        {"key": "visible_count", "type": "number", "label": "Sichtbare Logos", "default": 4},
+        {"key": "inject_footer", "type": "boolean", "label": "Kompakte Leiste im Body-Start", "default": false}
+    ]
+}

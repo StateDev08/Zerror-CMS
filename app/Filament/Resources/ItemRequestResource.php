@@ -2,19 +2,24 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Forms\CmsRichEditor;
 use App\Models\ItemRequest;
+use App\Support\HtmlContent;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Filament\Tables\Filters\SelectFilter;
+use Illuminate\Support\HtmlString;
 
 class ItemRequestResource extends Resource
 {
+    use \App\Filament\Concerns\ChecksCmsPermissions;
+
     protected static ?string $model = ItemRequest::class;
 
     protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-clipboard-document-list';
@@ -30,6 +35,12 @@ class ItemRequestResource extends Resource
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
+            Placeholder::make('custom_request_html')
+                ->label(__('crafting.custom_request'))
+                ->content(fn (?ItemRequest $record): HtmlString => $record
+                    ? HtmlContent::toHtml($record->custom_request)
+                    : new HtmlString(''))
+                ->columnSpanFull(),
             Select::make('status')
                 ->options(ItemRequest::statusLabels())
                 ->required(),
@@ -37,7 +48,7 @@ class ItemRequestResource extends Resource
             DatePicker::make('desired_date')->nullable()->label(__('crafting.desired_date')),
             Select::make('priority')->options(ItemRequest::priorityLabels())->label(__('crafting.priority')),
             TextInput::make('quantity')->numeric()->minValue(1)->default(1)->label(__('crafting.quantity')),
-            Textarea::make('admin_notes')->nullable()->rows(4)->label(__('crafting.admin_notes')),
+            CmsRichEditor::compact('admin_notes')->nullable()->label(__('crafting.admin_notes')),
         ]);
     }
 
@@ -47,7 +58,10 @@ class ItemRequestResource extends Resource
             ->columns([
                 TextColumn::make('user.name')->label(__('crafting.user'))->searchable(),
                 TextColumn::make('craftableItem.name')->label(__('crafting.item'))->placeholder(__('general.no_value')),
-                TextColumn::make('custom_request')->limit(40)->placeholder(__('general.no_value')),
+                TextColumn::make('custom_request')
+                    ->formatStateUsing(fn (?string $state): string => HtmlContent::plainText($state))
+                    ->limit(40)
+                    ->placeholder(__('general.no_value')),
                 TextColumn::make('quantity')->label(__('crafting.quantity'))->sortable(),
                 TextColumn::make('max_price')->label(__('crafting.max_price'))->formatStateUsing(fn ($state) => $state !== null ? number_format($state, 0, ',', '.') : __('general.no_value'))->sortable(),
                 TextColumn::make('desired_date')->label(__('crafting.desired_date'))->date()->placeholder(__('general.no_value'))->sortable(),

@@ -1,0 +1,16 @@
+{
+    "name": "palworld",
+    "version": "1.0.0",
+    "parent": "common",
+    "selectable": true,
+    "label": "Palworld",
+    "description": "Lebendige Farben, Pals und Abenteuer – Clan mit Style.",
+    "colors": {
+        "primary": "#4fc3f7",
+        "accent": "#ff8a65",
+        "background": "#0a1218",
+        "surface": "#12202a",
+        "text": "#eef9ff",
+        "text_muted": "#8eb4c9"
+    }
+}

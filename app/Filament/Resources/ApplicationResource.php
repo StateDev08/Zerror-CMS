@@ -2,17 +2,22 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Forms\CmsRichEditor;
 use App\Models\Application;
+use App\Support\HtmlContent;
+use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Support\HtmlString;
 
 class ApplicationResource extends Resource
 {
+    use \App\Filament\Concerns\ChecksCmsPermissions;
+
     protected static ?string $model = Application::class;
 
     protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-inbox';
@@ -26,13 +31,17 @@ class ApplicationResource extends Resource
         return $schema->components([
             TextInput::make('name')->required()->disabled(),
             TextInput::make('email')->email()->required()->disabled(),
-            Textarea::make('message')->required()->disabled(),
+            Placeholder::make('message_html')
+                ->label(__('apply.message'))
+                ->content(fn (?Application $record): HtmlString => $record
+                    ? HtmlContent::toHtml($record->message)
+                    : new HtmlString('')),
             Select::make('status')->options([
                 'open' => 'Offen',
                 'accepted' => 'Angenommen',
                 'rejected' => 'Abgelehnt',
             ])->required(),
-            Textarea::make('notes')->nullable(),
+            CmsRichEditor::compact('notes')->nullable()->label('Notizen'),
         ]);
     }
 

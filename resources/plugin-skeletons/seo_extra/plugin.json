@@ -1,0 +1,11 @@
+{
+    "name": "seo_extra",
+    "label": "SEO Extra",
+    "version": "1.0.0",
+    "description": "Keywords und zusätzliche Meta-Tags – ohne Title/Description (Settings).",
+    "configSchema": [
+        {"key": "enabled", "type": "boolean", "label": "Aktiv", "default": true},
+        {"key": "keywords", "type": "text", "label": "Meta Keywords", "default": ""},
+        {"key": "extra_meta", "type": "textarea", "label": "Extra Meta (name|content pro Zeile)", "default": "", "help": "Beispiel: robots|index,follow"}
+    ]
+}

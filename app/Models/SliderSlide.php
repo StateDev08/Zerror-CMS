@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\SiteMedia;
 use Illuminate\Database\Eloquent\Model;
 
 class SliderSlide extends Model
@@ -14,5 +15,19 @@ class SliderSlide extends Model
             'order' => 'integer',
             'active' => 'boolean',
         ];
+    }
+
+    protected static function booted(): void
+    {
+        static::saved(function (SliderSlide $slide): void {
+            if (! $slide->active) {
+                return;
+            }
+            if (! SiteMedia::bannerEnabled() || ! SiteMedia::bannerConfigured()) {
+                return;
+            }
+            SiteMedia::disableBannerForSlider();
+            session()->flash('warning', __('settings.banner_slider_conflict_auto'));
+        });
     }
 }

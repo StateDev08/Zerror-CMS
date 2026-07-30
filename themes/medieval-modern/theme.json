@@ -1,0 +1,21 @@
+{
+    "name": "medieval-modern",
+    "version": "1.1.0",
+    "parent": "common",
+    "selectable": true,
+    "label": "Medieval Modern",
+    "description": "Dunkles Fantasy-UI: Stein, Messing, Pergament – Menü, Vollbreiten-Slider, Zierbalken, 3 Spalten.",
+    "colors": {
+        "primary": "#c4a35a",
+        "accent": "#2f6b4f",
+        "background": "#0a0c10",
+        "surface": "#141820",
+        "text": "#f0e6d2",
+        "text_muted": "#a89b86"
+    },
+    "fonts": {
+        "display": "UnifrakturCook",
+        "body": "Cinzel",
+        "url": "https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=UnifrakturCook:wght@700&display=swap"
+    }
+}

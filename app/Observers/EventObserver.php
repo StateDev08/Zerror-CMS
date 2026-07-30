@@ -26,8 +26,8 @@ class EventObserver
         }
 
         $appUrl = rtrim(config('discord_bot.app_url'), '/');
-        $starts = $event->starts_at->format('d.m.Y H:i');
-        $ends = $event->ends_at ? $event->ends_at->format('d.m.Y H:i') : '—';
+        $starts = $event->starts_at->format(site_datetime_format());
+        $ends = $event->ends_at ? $event->ends_at->format(site_datetime_format()) : '—';
         $location = $event->location ?? '—';
         $type = $event->type ?? 'Sonstiges';
 

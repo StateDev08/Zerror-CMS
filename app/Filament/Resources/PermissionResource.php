@@ -12,6 +12,8 @@ use Spatie\Permission\Models\Permission;
 
 class PermissionResource extends Resource
 {
+    use \App\Filament\Concerns\ChecksCmsPermissions;
+
     protected static ?string $model = Permission::class;
 
     protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-key';
@@ -22,8 +24,8 @@ class PermissionResource extends Resource
 
     protected static ?string $pluralModelLabel = 'Berechtigungen';
 
-    protected static \UnitEnum|string|null $navigationGroup = 'Rechteverwaltung';
-    protected static ?int $navigationSort = 3;
+    protected static \UnitEnum|string|null $navigationGroup = 'Benutzer';
+    protected static ?int $navigationSort = 30;
 
     public static function form(Schema $schema): Schema
     {

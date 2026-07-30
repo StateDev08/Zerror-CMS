@@ -11,6 +11,8 @@ use Filament\Tables\Table;
 
 class MediaResource extends Resource
 {
+    use \App\Filament\Concerns\ChecksCmsPermissions;
+
     protected static ?string $model = Media::class;
 
     protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-photo';
@@ -19,10 +21,21 @@ class MediaResource extends Resource
 
     protected static \UnitEnum|string|null $navigationGroup = 'Inhalte';
 
+    protected static ?int $navigationSort = 40;
+
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
-            FileUpload::make('path')->directory('media')->required(),
+            FileUpload::make('path')
+                ->disk('public')
+                ->directory('media')
+                ->acceptedFileTypes([
+                    'image/jpeg', 'image/png', 'image/gif', 'image/webp',
+                    'application/pdf', 'video/mp4', 'audio/mpeg',
+                ])
+                ->maxSize(fn () => \App\Support\UploadLimits::fileKb())
+                ->helperText(fn () => __('settings.upload_limit_hint', ['mb' => \App\Support\UploadLimits::fileMb()]))
+                ->required(),
         ]);
     }
 

@@ -2,8 +2,9 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Forms\CmsRichEditor;
+
 use App\Models\WikiCategory;
-use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -13,20 +14,24 @@ use Illuminate\Support\Str;
 
 class WikiCategoryResource extends Resource
 {
+    use \App\Filament\Concerns\ChecksCmsPermissions;
+
     protected static ?string $model = WikiCategory::class;
 
     protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-folder';
 
     protected static ?string $navigationLabel = 'Wiki-Kategorien';
 
-    protected static \UnitEnum|string|null $navigationGroup = 'Wiki';
+    protected static \UnitEnum|string|null $navigationGroup = 'Community';
+
+    protected static ?int $navigationSort = 20;
 
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
             TextInput::make('name')->required()->live(onBlur: true)->afterStateUpdated(fn ($state, $set) => $set('slug', Str::slug($state))),
             TextInput::make('slug')->required(),
-            Textarea::make('description')->nullable()->rows(2),
+            CmsRichEditor::compact('description')->nullable(),
             TextInput::make('order')->numeric()->default(0),
         ]);
     }

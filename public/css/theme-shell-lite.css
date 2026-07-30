@@ -1,0 +1,195 @@
+/* Game/Brand Shell Lite — Struktur ohne Look-Zwang.
+   Flavor-Themes setzen --gs-* und eigene Optik. */
+
+.theme-shell-lite {
+    --gs-radius: 0.5rem;
+    --gs-panel: color-mix(in srgb, var(--theme-surface) 92%, #000);
+    --gs-ink: var(--theme-text);
+    --gs-muted: var(--theme-muted);
+    --gs-line: color-mix(in srgb, var(--theme-primary) 40%, transparent);
+    --gs-gap: clamp(0.75rem, 2vw, 1rem);
+    margin: 0;
+    min-height: 100vh;
+    color: var(--theme-text);
+    background: var(--theme-bg);
+}
+
+.theme-shell-lite .gs-page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.theme-shell-lite .gs-top {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    border-bottom: 1px solid var(--gs-line);
+    background: color-mix(in srgb, var(--theme-bg) 82%, #000);
+    backdrop-filter: blur(10px);
+}
+
+.theme-shell-lite .gs-top__inner {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    width: 100%;
+    padding: 0.65rem 1rem;
+    min-height: 3.5rem;
+    box-sizing: border-box;
+    overflow: visible;
+}
+
+.theme-shell-lite .gs-top__inner > a.gs-brand,
+.theme-shell-lite .gs-top__inner > a:has(.site-brand-logo) {
+    flex-shrink: 1;
+    min-width: 0;
+    max-width: min(46vw, 11rem);
+}
+
+.theme-shell-lite .gs-top__inner > a.gs-brand .site-brand-logo,
+.theme-shell-lite .gs-top__inner > a:has(.site-brand-logo) .site-brand-logo {
+    max-width: 100% !important;
+}
+
+.theme-shell-lite .gs-top__tools {
+    flex-shrink: 0;
+    margin-left: auto;
+    position: relative;
+    z-index: 8;
+}
+
+@media (max-width: 767px) {
+    .theme-shell-lite .gs-top__inner {
+        gap: 0.4rem;
+        padding: 0.5rem 0.55rem;
+    }
+    .theme-shell-lite .gs-top__inner > a.gs-brand,
+    .theme-shell-lite .gs-top__inner > a:has(.site-brand-logo) {
+        max-width: min(36vw, 7.25rem);
+    }
+    .theme-shell-lite .gs-top__inner > a.gs-brand .site-brand-logo,
+    .theme-shell-lite .gs-top__inner > a:has(.site-brand-logo) .site-brand-logo {
+        height: auto !important;
+        max-height: 2.65rem !important;
+        margin-top: 0 !important;
+        margin-bottom: 0 !important;
+    }
+    .theme-shell-lite .gt-nav__select {
+        min-width: 5rem;
+        max-width: 6.25rem;
+    }
+}
+
+.theme-shell-lite .gs-body {
+    flex: 1;
+    width: 100%;
+    padding: 0.75rem clamp(0.65rem, 2vw, 1rem) 1.25rem;
+    box-sizing: border-box;
+}
+
+.theme-shell-lite .gs-hero {
+    width: 100%;
+    margin: 0 0 var(--gs-gap);
+    border: 1px solid var(--gs-line);
+    border-radius: var(--gs-radius);
+    overflow: hidden;
+    background: color-mix(in srgb, var(--theme-surface) 80%, #000);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+}
+
+.theme-shell-lite .gs-hero .hero-media,
+.theme-shell-lite .gs-hero .site-banner,
+.theme-shell-lite .gs-hero .slider-root {
+    margin: 0 !important;
+    border-radius: 0 !important;
+}
+
+.theme-shell-lite .gs-grid {
+    display: grid;
+    gap: var(--gs-gap);
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+    width: 100%;
+}
+
+.theme-shell-lite .gs-col {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.theme-shell-lite .gs-main {
+    min-width: 0;
+}
+
+.theme-shell-lite .gs-panel {
+    background: var(--gs-panel);
+    border: 1px solid var(--gs-line);
+    border-radius: var(--gs-radius);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.28);
+    color: var(--gs-ink);
+}
+
+.theme-shell-lite .gs-main > .gs-panel {
+    padding: clamp(0.85rem, 2vw, 1.25rem);
+}
+
+.theme-shell-lite .gs-footer {
+    margin-top: auto;
+    border-top: 1px solid var(--gs-line);
+    padding: 1.25rem 1rem;
+    text-align: center;
+    font-size: 0.9rem;
+    color: var(--gs-muted);
+    background: color-mix(in srgb, var(--theme-bg) 88%, #000);
+}
+
+@media (max-width: 1023px) {
+    .theme-shell-lite .gs-main { order: -1; }
+}
+
+@media (min-width: 1024px) {
+    .theme-shell-lite .gs-grid--both {
+        grid-template-columns: minmax(13rem, 16rem) minmax(0, 1fr) minmax(13rem, 16rem);
+    }
+    .theme-shell-lite .gs-grid--left {
+        grid-template-columns: minmax(13rem, 16rem) minmax(0, 1fr);
+    }
+    .theme-shell-lite .gs-grid--right {
+        grid-template-columns: minmax(0, 1fr) minmax(13rem, 16rem);
+    }
+    .theme-shell-lite .gs-main { order: 0; }
+}
+
+/* Kontrast: Tailwind-Neutrals ohne .dark */
+.theme-shell-lite .gs-main :is(
+    .text-neutral-900, .text-neutral-800, .text-neutral-700, .text-neutral-600,
+    .text-gray-900, .text-gray-800, .text-gray-700, .text-black
+) {
+    color: var(--theme-text) !important;
+}
+.theme-shell-lite .gs-main :is(.text-neutral-500, .text-neutral-400, .text-gray-500) {
+    color: var(--theme-muted) !important;
+}
+.theme-shell-lite .gs-main :is(h1, h2, h3, .page-title) {
+    color: var(--theme-text);
+}
+
+.theme-shell-lite .theme-link-primary { color: var(--theme-primary); }
+.theme-shell-lite .theme-bg-primary {
+    background: var(--theme-primary);
+    color: #111;
+}
+
+/* Widget/Auth Defaults (Flavor überschreibt) */
+.theme-shell-lite .cms-widget {
+    border-radius: var(--gs-radius);
+}
+.theme-shell-lite .auth-shell__title { color: var(--theme-text); }
+.theme-shell-lite .auth-card {
+    background: var(--gs-panel);
+    border-color: var(--gs-line);
+    color: var(--gs-ink);
+}

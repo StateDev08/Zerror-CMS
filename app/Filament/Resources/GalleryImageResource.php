@@ -14,19 +14,30 @@ use Filament\Tables\Table;
 
 class GalleryImageResource extends Resource
 {
+    use \App\Filament\Concerns\ChecksCmsPermissions;
+
     protected static ?string $model = GalleryImage::class;
 
     protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-camera';
 
     protected static ?string $navigationLabel = 'Bilder';
 
-    protected static \UnitEnum|string|null $navigationGroup = 'Galerie';
+    protected static \UnitEnum|string|null $navigationGroup = 'Community';
+
+    protected static ?int $navigationSort = 35;
 
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
             Select::make('album_id')->relationship('album', 'name')->required(),
-            FileUpload::make('path')->image()->directory('gallery')->disk('public')->required(),
+            FileUpload::make('path')
+                ->image()
+                ->directory('gallery')
+                ->disk('public')
+                ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/gif', 'image/webp'])
+                ->maxSize(fn () => \App\Support\UploadLimits::imageKb())
+                ->helperText(fn () => __('settings.upload_limit_hint', ['mb' => \App\Support\UploadLimits::imageMb()]))
+                ->required(),
             TextInput::make('title')->nullable(),
             TextInput::make('order')->numeric()->default(0),
         ]);

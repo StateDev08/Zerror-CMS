@@ -1,0 +1,16 @@
+{
+    "name": "bluebyte",
+    "version": "1.0.0",
+    "parent": "common",
+    "selectable": true,
+    "label": "BlueByte Development",
+    "description": "Icy Techno-Fantasy – Mitternachtblau, Cyan-Glow, Glasflächen. Community-driven.",
+    "colors": {
+        "primary": "#3dd5ff",
+        "accent": "#6b8cff",
+        "background": "#050a12",
+        "surface": "#0c1524",
+        "text": "#eaf4ff",
+        "text_muted": "#7f9cb8"
+    }
+}

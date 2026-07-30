@@ -12,13 +12,17 @@ use Filament\Tables\Table;
 
 class ClanLeaderboardEntryResource extends Resource
 {
+    use \App\Filament\Concerns\ChecksCmsPermissions;
+
     protected static ?string $model = ClanLeaderboardEntry::class;
 
     protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-chart-bar';
 
     protected static ?string $navigationLabel = 'Ranglisten-Einträge';
 
-    protected static \UnitEnum|string|null $navigationGroup = 'Clan Rangliste';
+    protected static \UnitEnum|string|null $navigationGroup = 'Clan';
+
+    protected static ?int $navigationSort = 115;
 
     public static function form(Schema $schema): Schema
     {

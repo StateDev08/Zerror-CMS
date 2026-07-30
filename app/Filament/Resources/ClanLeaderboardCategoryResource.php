@@ -12,13 +12,17 @@ use Illuminate\Support\Str;
 
 class ClanLeaderboardCategoryResource extends Resource
 {
+    use \App\Filament\Concerns\ChecksCmsPermissions;
+
     protected static ?string $model = ClanLeaderboardCategory::class;
 
     protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-trophy';
 
     protected static ?string $navigationLabel = 'Ranglisten-Kategorien';
 
-    protected static \UnitEnum|string|null $navigationGroup = 'Clan Rangliste';
+    protected static \UnitEnum|string|null $navigationGroup = 'Clan';
+
+    protected static ?int $navigationSort = 110;
 
     public static function form(Schema $schema): Schema
     {

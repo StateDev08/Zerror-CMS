@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import { Client, Events, GatewayIntentBits, REST, Routes, SlashCommandBuilder } from 'discord.js';
-import { getCommands, runCommand, getPlayerByDiscordId } from './api.js';
+import { getCommands, runCommand, getPlayerByDiscordId, linkDiscord } from './api.js';
 
 const token = process.env.DISCORD_BOT_TOKEN;
 const guildId = process.env.DISCORD_GUILD_ID || null;
@@ -34,6 +34,13 @@ async function registerSlashCommands() {
     new SlashCommandBuilder()
       .setName('spieler')
       .setDescription('Zeigt deinen verknüpften Spieler/User von der Website an (wenn verknüpft)')
+      .toJSON(),
+    new SlashCommandBuilder()
+      .setName('link')
+      .setDescription('Verknüpfe deinen Discord-Account mit der Website (Token aus UserCP)')
+      .addStringOption(opt =>
+        opt.setName('token').setDescription('Link-Token aus dem UserCP der Website').setRequired(true)
+      )
       .toJSON(),
   ];
 
@@ -107,7 +114,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
       const data = await getPlayerByDiscordId(interaction.user.id);
       if (!data.found || !data.user) {
         await interaction.editReply({
-          content: 'Du bist noch nicht mit einem Spieler/User der Website verknüpft. Verknüpfung erfolgt im UserCP auf der Website.',
+          content: 'Du bist noch nicht mit einem Spieler/User der Website verknüpft. Erzeuge im UserCP einen Link-Token und nutze `/link token:xxx`.',
           ephemeral: true,
         });
         return;
@@ -119,6 +126,25 @@ client.on(Events.InteractionCreate, async (interaction) => {
     } catch (e) {
       console.error(e);
       await interaction.editReply({ content: '⚠️ Verbindung zur Website fehlgeschlagen.', ephemeral: true });
+    }
+    return;
+  }
+
+  if (interaction.commandName === 'link') {
+    await interaction.deferReply({ ephemeral: true });
+    const linkToken = interaction.options.getString('token', true).trim();
+    try {
+      await linkDiscord(interaction.user.id, linkToken, interaction.user.username);
+      await interaction.editReply({
+        content: '✅ Discord erfolgreich mit der Website verknüpft! Nutze `/spieler` zur Prüfung.',
+        ephemeral: true,
+      });
+    } catch (e) {
+      console.error(e);
+      await interaction.editReply({
+        content: '❌ Verknüpfung fehlgeschlagen. Prüfe, ob der Token gültig und nicht abgelaufen ist (15 Minuten).',
+        ephemeral: true,
+      });
     }
   }
 });

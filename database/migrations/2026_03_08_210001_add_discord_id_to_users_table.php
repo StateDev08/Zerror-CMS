@@ -8,6 +8,10 @@ return new class extends Migration
 {
     public function up(): void
     {
+        if (! Schema::hasTable('users') || Schema::hasColumn('users', 'discord_id')) {
+            return;
+        }
+
         Schema::table('users', function (Blueprint $table) {
             $table->string('discord_id', 64)->nullable()->after('discord_handle')->index();
         });
@@ -15,6 +19,10 @@ return new class extends Migration
 
     public function down(): void
     {
+        if (! Schema::hasTable('users') || ! Schema::hasColumn('users', 'discord_id')) {
+            return;
+        }
+
         Schema::table('users', function (Blueprint $table) {
             $table->dropColumn('discord_id');
         });

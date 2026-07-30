@@ -2,9 +2,10 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Forms\CmsRichEditor;
+
 use App\Models\CraftableItem;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
@@ -16,6 +17,8 @@ use Illuminate\Support\Str;
 
 class CraftableItemResource extends Resource
 {
+    use \App\Filament\Concerns\ChecksCmsPermissions;
+
     protected static ?string $model = CraftableItem::class;
 
     protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-wrench-screwdriver';
@@ -28,12 +31,14 @@ class CraftableItemResource extends Resource
 
     protected static \UnitEnum|string|null $navigationGroup = 'Clan';
 
+    protected static ?int $navigationSort = 70;
+
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
             TextInput::make('name')->required()->live(onBlur: true)->afterStateUpdated(fn ($state, $set) => $set('slug', Str::slug($state))),
             TextInput::make('slug')->nullable(),
-            Textarea::make('description')->nullable()->rows(3),
+            CmsRichEditor::compact('description')->nullable(),
             Select::make('category')
                 ->options([
                     'Waffe' => __('crafting.category_weapon'),

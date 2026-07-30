@@ -1,0 +1,104 @@
+/* Minecraft — Block / Pixel */
+
+.theme-minecraft {
+    --gs-radius: 2px;
+    --gs-panel: color-mix(in srgb, var(--theme-surface) 88%, #000);
+    --gs-line: color-mix(in srgb, var(--theme-primary) 55%, #3d5c2e);
+    --gs-ink: var(--theme-text);
+    font-family: 'VT323', system-ui, sans-serif;
+    background:
+        linear-gradient(180deg, color-mix(in srgb, var(--theme-bg) 92%, #000), var(--theme-bg)),
+        repeating-linear-gradient(0deg, transparent, transparent 7px, rgba(0,0,0,.04) 7px, rgba(0,0,0,.04) 8px);
+    background-attachment: fixed;
+    image-rendering: auto;
+}
+
+.theme-minecraft .font-display {
+    font-family: 'Press Start 2P', monospace;
+    letter-spacing: 0.04em;
+    line-height: 1.5;
+}
+
+.theme-minecraft .gs-top {
+    border-bottom: 3px solid var(--theme-primary);
+    background: color-mix(in srgb, #0a0e0b 90%, var(--theme-primary));
+    box-shadow: 0 4px 0 color-mix(in srgb, #000 55%, transparent);
+    backdrop-filter: none;
+}
+
+.theme-minecraft .top-nav a {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--theme-primary) 80%, #fff);
+    text-shadow: 1px 1px 0 #000;
+}
+.theme-minecraft .top-nav a:hover,
+.theme-minecraft .top-nav a[aria-current="page"] {
+    color: var(--theme-accent);
+    text-shadow: 0 0 0 #000, 2px 2px 0 #000;
+}
+
+.theme-minecraft .gs-hero {
+    border-radius: 0;
+    border: 3px solid #2a2a2a;
+    box-shadow:
+        inset -3px -3px 0 rgba(0,0,0,.45),
+        inset 3px 3px 0 rgba(255,255,255,.08),
+        0 8px 0 rgba(0,0,0,.35);
+}
+
+.theme-minecraft .gs-panel,
+.theme-minecraft .cms-widget,
+.theme-minecraft .auth-card,
+.theme-minecraft .panel-box {
+    border-radius: 0 !important;
+    border: 3px solid #3a3a3a !important;
+    background:
+        linear-gradient(180deg, color-mix(in srgb, var(--theme-surface) 95%, #fff), var(--theme-surface)) !important;
+    box-shadow:
+        inset -2px -2px 0 rgba(0,0,0,.35),
+        inset 2px 2px 0 rgba(255,255,255,.06),
+        4px 4px 0 rgba(0,0,0,.4) !important;
+}
+
+.theme-minecraft .cms-widget__title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.58rem;
+    color: var(--theme-accent) !important;
+    letter-spacing: 0.04em;
+}
+
+.theme-minecraft .cms-widget__cta,
+.theme-minecraft .theme-bg-primary,
+.theme-minecraft .auth-card__submit {
+    border-radius: 0 !important;
+    border: 2px solid #1a1a1a !important;
+    background: linear-gradient(180deg, color-mix(in srgb, var(--theme-primary) 80%, #fff), var(--theme-primary)) !important;
+    color: #0a1208 !important;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.58rem;
+    box-shadow: 3px 3px 0 rgba(0,0,0,.45) !important;
+    text-transform: uppercase;
+}
+
+.theme-minecraft .auth-card__input {
+    border-radius: 0 !important;
+    border: 2px solid #3a3a3a !important;
+    background: #0c100e !important;
+    color: var(--theme-text) !important;
+    font-family: 'VT323', monospace;
+    font-size: 1.15rem;
+}
+
+.theme-minecraft .gs-footer {
+    border-top: 3px solid var(--theme-primary);
+    background: #080b09;
+}
+
+.theme-minecraft .music-dock {
+    border-radius: 0;
+    border: 3px solid #3a3a3a;
+    box-shadow: 4px 4px 0 rgba(0,0,0,.5);
+}

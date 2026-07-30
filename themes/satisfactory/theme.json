@@ -1,0 +1,16 @@
+{
+    "name": "satisfactory",
+    "version": "1.0.0",
+    "parent": "common",
+    "selectable": true,
+    "label": "Satisfactory",
+    "description": "FICSIT Orange und Stahl – Fabriken bis zum Orbit.",
+    "colors": {
+        "primary": "#fa9549",
+        "accent": "#4a90d9",
+        "background": "#0b0d10",
+        "surface": "#151a20",
+        "text": "#f0f3f7",
+        "text_muted": "#9aa3ad"
+    }
+}

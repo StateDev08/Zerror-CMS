@@ -20,67 +20,45 @@ Vollständiges Clan-CMS auf **Laravel** (PHP) mit **Filament** als Admin-Panel. 
 - Empfohlene PHP-Extensions: `pdo`, `pdo_mysql`, `mbstring`, `openssl`, `tokenizer`, `xml`, `ctype`, `json`, `bcmath`, `fileinfo`
 - Optional: Node.js/npm für Frontend-Assets (Tailwind per Vite; in Produktion empfohlen, sonst CDN-Fallback)
 
+### PHP-Limits für System-Modul-ZIP & lange Imports (Kingshot)
+
+Unter diesen Werten bricht der Vorgang ab. In Plesk → PHP-Einstellungen **mindestens**:
+
+| Einstellung | Minimum |
+|-------------|---------|
+| `memory_limit` | 1028M |
+| `max_execution_time` | 3600 |
+| `max_input_time` | 6000 |
+| `post_max_size` | 1060M |
+| `upload_max_filesize` | 3600M |
+
+Lange Imports laufen im Hintergrund (ACP-Button), weil Proxy/Livewire sonst mit **504** abbricht – unabhängig von `max_execution_time`.
+
 Für `.env` und `APP_KEY` siehe Installer bzw. **plesk.README.md** (Plesk/Shared Hosting).
 
 ## Installation
 
-### Variante A: Webbrowser-Installer (empfohlen)
+Nur über den **Web-Installer** unter `/install` (keine separaten Setup-Skripte).
 
-1. Abhängigkeiten installieren und Webserver auf `public/` zeigen:
-   ```bash
-   composer install
-   ```
+1. Document Root auf `public/` zeigen. Einmalig `composer install`, damit Laravel starten kann (oder im Installer-Schritt 1 „Composer installieren“, falls Composer auf dem Server verfügbar ist).
+2. Datenbank anlegen (z. B. `CREATE DATABASE zerrocms;`).
+3. Im Browser `/install` öffnen und dem Assistenten folgen:
 
-2. Im Browser die Seite aufrufen (z. B. `https://deine-domain.de/install`).  
-   Ohne vorhandene `.env` wird diese aus `.env.example` erzeugt und ein App-Key gesetzt.
+| Schritt | Inhalt |
+|--------|--------|
+| 1 | Anforderungen prüfen; `.env` + `APP_KEY` automatisch; optional Composer-Abhängigkeiten nachinstallieren |
+| 2 | Datenbankverbindung speichern (`QUEUE_CONNECTION=sync`) |
+| 3 | Migrationen |
+| 4 | Clan-Name, App-URL, Admin-Benutzer – Abschluss führt aus: Seed (Rollen/Menü), `storage:link`, `npm install && npm run build` (falls npm vorhanden) |
 
-3. Dem Assistenten folgen:
-   - **Schritt 1:** Systemanforderungen prüfen (PHP, Extensions, Schreibrechte).
-   - **Schritt 2:** Datenbankverbindung (Host, Port, Datenbankname, Benutzer, Passwort). Die Datenbank muss vorher angelegt sein.
-   - **Schritt 3:** Migrationen ausführen (Tabellen anlegen).
-   - **Schritt 4:** Admin-Benutzer anlegen (Name, E-Mail, Passwort). Rollen/Berechtigungen werden automatisch angelegt.
+Nach Erfolg: Hinweis auf der Startseite und Link zum Admin (`/admin`).
 
-4. Nach Abschluss: Speicher-Link für Uploads erstellen (einmalig):
-   ```bash
-   php artisan storage:link
-   ```
-
-5. Für Produktion: Frontend-Assets bauen (entfernt die Tailwind-CDN-Warnung und lädt gebautes CSS):
-   ```bash
-   npm ci && npm run build
-   ```
-
-Wenn die Anwendung bereits installiert ist, leitet `/install` automatisch auf die Startseite weiter.
-
-### Variante B: Manuelle Installation
-
-1. Abhängigkeiten installieren:
-   ```bash
-   composer install
-   ```
-
-2. Umgebung einrichten:
-   ```bash
-   cp .env.example .env
-   php artisan key:generate
-   ```
-
-3. Datenbank in `.env` konfigurieren, dann:
-   ```bash
-   php artisan migrate
-   php artisan db:seed
-   ```
-   Admin-User z. B. mit einem SQL-Insert anlegen (siehe `database/` oder Plesk-README).
-
-4. Öffentlichen Speicher-Link erstellen:
-   ```bash
-   php artisan storage:link
-   ```
+Wenn die Anwendung bereits installiert ist, leitet `/install` automatisch weiter.
 
 ### Optional
 
 - **Bewerbungs-Benachrichtigung / Discord:** In `.env`: `APPLICATION_NOTIFY_EMAIL=...`, `DISCORD_WEBHOOK_URL=...`
-- **Vite:** Ohne `npm run build` nutzt das Theme einen CDN-Fallback für Tailwind; für Produktion wird Build empfohlen.
+- **Vite:** Ohne npm nutzt das Theme einen CDN-Fallback für Tailwind.
 
 ## Konfiguration
 

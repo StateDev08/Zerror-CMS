@@ -5,7 +5,7 @@ namespace App\Filament\Resources;
 use App\Models\Event;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Textarea;
+use App\Filament\Forms\CmsRichEditor;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
@@ -16,6 +16,8 @@ use Filament\Tables\Table;
 
 class EventResource extends Resource
 {
+    use \App\Filament\Concerns\ChecksCmsPermissions;
+
     protected static ?string $model = Event::class;
 
     protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-calendar';
@@ -24,11 +26,13 @@ class EventResource extends Resource
 
     protected static \UnitEnum|string|null $navigationGroup = 'Inhalte';
 
+    protected static ?int $navigationSort = 50;
+
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
             TextInput::make('title')->required(),
-            Textarea::make('description')->nullable(),
+            CmsRichEditor::make('description')->nullable(),
             DateTimePicker::make('starts_at')->required(),
             DateTimePicker::make('ends_at')->nullable(),
             TextInput::make('location')->nullable(),

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class JobOffer extends Model
 {
@@ -20,6 +21,11 @@ class JobOffer extends Model
     public function category(): BelongsTo
     {
         return $this->belongsTo(JobOfferCategory::class, 'category_id');
+    }
+
+    public function applications(): HasMany
+    {
+        return $this->hasMany(JobApplication::class);
     }
 
     public function getRouteKeyName(): string

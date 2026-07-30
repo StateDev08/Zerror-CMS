@@ -12,13 +12,17 @@ use Illuminate\Support\Str;
 
 class ForumCategoryResource extends Resource
 {
+    use \App\Filament\Concerns\ChecksCmsPermissions;
+
     protected static ?string $model = ForumCategory::class;
 
     protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-chat-bubble-left-right';
 
     protected static ?string $navigationLabel = 'Forum-Kategorien';
 
-    protected static \UnitEnum|string|null $navigationGroup = 'Forum';
+    protected static \UnitEnum|string|null $navigationGroup = 'Community';
+
+    protected static ?int $navigationSort = 10;
 
     public static function form(Schema $schema): Schema
     {

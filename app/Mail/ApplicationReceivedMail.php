@@ -20,7 +20,7 @@ class ApplicationReceivedMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: __('mail.application_received_subject', ['name' => config('clan.name')]),
+            subject: __('mail.application_received_subject', ['name' => site_name()]),
         );
     }
 

@@ -1,0 +1,16 @@
+{
+    "name": "pax-dei",
+    "version": "1.0.0",
+    "parent": "common",
+    "selectable": true,
+    "label": "Pax Dei",
+    "description": "Koenigliches Mittelalter – Blau und Gold wie ein Clan-Banner.",
+    "colors": {
+        "primary": "#d4af37",
+        "accent": "#2f5fd0",
+        "background": "#07080f",
+        "surface": "#10131c",
+        "text": "#f7f3e8",
+        "text_muted": "#a9b0c3"
+    }
+}

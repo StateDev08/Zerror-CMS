@@ -1,0 +1,6 @@
+[
+    {"key": "title", "type": "text", "label": "Titel", "default": "Unterstützung"},
+    {"key": "intro", "type": "textarea", "label": "Intro", "default": "Unterstütze uns mit einer Spende."},
+    {"key": "button_text", "type": "text", "label": "Button", "default": "Jetzt spenden"},
+    {"key": "url", "type": "url", "label": "Spenden-URL", "default": "", "help": "Leer = Einstellungen donation_url"}
+]

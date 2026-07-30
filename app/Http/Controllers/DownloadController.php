@@ -10,7 +10,11 @@ class DownloadController extends Controller
 {
     public function index()
     {
-        $categories = DownloadCategory::with('downloads')->orderBy('order')->get();
+        $categories = DownloadCategory::query()
+            ->with(['downloads' => fn ($q) => $q->orderBy('name')])
+            ->orderBy('order')
+            ->get();
+
         return view('theme::downloads.index', ['categories' => $categories]);
     }
 

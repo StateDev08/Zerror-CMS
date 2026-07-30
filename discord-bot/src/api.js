@@ -40,11 +40,18 @@ export async function getPlayerByDiscordId(discordId) {
   return await res.json();
 }
 
-export async function linkDiscord(discordId, userId) {
+export async function linkDiscord(discordId, linkToken, discordHandle) {
+  const body = {
+    discord_id: discordId,
+    link_token: linkToken,
+  };
+  if (discordHandle) {
+    body.discord_handle = discordHandle;
+  }
   const res = await fetch(`${API_URL}/api/discord-bot/link`, {
     method: 'POST',
     headers: headers(),
-    body: JSON.stringify({ discord_id: discordId, user_id: userId }),
+    body: JSON.stringify(body),
   });
   if (!res.ok) throw new Error(`API ${res.status}: ${await res.text()}`);
   return await res.json();

@@ -1,0 +1,16 @@
+{
+    "name": "minecraft",
+    "version": "1.0.0",
+    "parent": "common",
+    "selectable": true,
+    "label": "Minecraft",
+    "description": "Blockige Welten, Smaragd und Gold – epische Clan-Base.",
+    "colors": {
+        "primary": "#55c233",
+        "accent": "#f1c232",
+        "background": "#0c100e",
+        "surface": "#161c18",
+        "text": "#e8f5e9",
+        "text_muted": "#9cba9f"
+    }
+}

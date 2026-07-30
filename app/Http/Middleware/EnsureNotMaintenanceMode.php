@@ -2,7 +2,6 @@
 
 namespace App\Http\Middleware;
 
-use App\Support\PluginManager;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -11,6 +10,7 @@ class EnsureNotMaintenanceMode
 {
     /**
      * Wenn Wartungsmodus aktiv ist: Nur Admin-Zugang und Login erlauben, sonst Wartungsseite anzeigen.
+     * Single Source of Truth: settings.maintenance_enabled / maintenance_message.
      */
     public function handle(Request $request, Closure $next): Response
     {
@@ -37,17 +37,13 @@ class EnsureNotMaintenanceMode
         }
 
         $message = $this->maintenanceMessage();
+
         return response()->view('maintenance', ['message' => $message], 503);
     }
 
     protected function maintenanceEnabled(): bool
     {
         try {
-            $pluginManager = app(PluginManager::class);
-            if ($pluginManager->isEnabled('maintenance')) {
-                $config = plugin_config('maintenance');
-                return (bool) ($config['enabled'] ?? false);
-            }
             return (bool) filter_var(setting('maintenance_enabled', '0'), FILTER_VALIDATE_BOOLEAN);
         } catch (\Throwable $e) {
             return false;
@@ -57,15 +53,11 @@ class EnsureNotMaintenanceMode
     protected function maintenanceMessage(): ?string
     {
         try {
-            $pluginManager = app(PluginManager::class);
-            if ($pluginManager->isEnabled('maintenance')) {
-                $config = plugin_config('maintenance');
-                $msg = trim((string) ($config['message'] ?? ''));
-                return $msg !== '' ? $msg : null;
-            }
+            $msg = trim((string) setting('maintenance_message', ''));
+
+            return $msg !== '' ? $msg : null;
         } catch (\Throwable $e) {
-            //
+            return null;
         }
-        return null;
     }
 }

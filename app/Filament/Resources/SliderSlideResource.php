@@ -15,6 +15,8 @@ use Filament\Tables\Table;
 
 class SliderSlideResource extends Resource
 {
+    use \App\Filament\Concerns\ChecksCmsPermissions;
+
     protected static ?string $model = SliderSlide::class;
 
     protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-photo';
@@ -23,15 +25,26 @@ class SliderSlideResource extends Resource
 
     protected static \UnitEnum|string|null $navigationGroup = 'Inhalte';
 
+    protected static ?int $navigationSort = 20;
+
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
             TextInput::make('title')->nullable(),
             TextInput::make('subtitle')->nullable(),
-            FileUpload::make('image')->image()->directory('slider')->disk('public')->required(),
+            FileUpload::make('image')
+                ->image()
+                ->directory('slider')
+                ->disk('public')
+                ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/gif', 'image/webp'])
+                ->maxSize(fn () => \App\Support\UploadLimits::imageKb())
+                ->helperText(fn () => __('settings.upload_limit_hint', ['mb' => \App\Support\UploadLimits::imageMb()]))
+                ->required(),
             TextInput::make('link')->url()->nullable(),
             TextInput::make('order')->numeric()->default(0),
-            Toggle::make('active')->default(true),
+            Toggle::make('active')
+                ->default(true)
+                ->helperText(__('settings.banner_slider_exclusive_info')),
         ]);
     }
 

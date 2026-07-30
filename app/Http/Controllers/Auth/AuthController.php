@@ -6,7 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Validation\Rules\Password;
+use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
@@ -22,14 +25,36 @@ class AuthController extends Controller
             'password' => ['required'],
         ]);
 
-        if (Auth::attempt($validated, (bool) $request->boolean('remember'))) {
-            $request->session()->regenerate();
-            return redirect()->intended(route('usercp.index'));
+        $key = 'login:'.strtolower($validated['email']).'|'.$request->ip();
+        if (RateLimiter::tooManyAttempts($key, 5)) {
+            $seconds = RateLimiter::availableIn($key);
+            throw ValidationException::withMessages([
+                'email' => __('auth.throttle', [
+                    'seconds' => $seconds,
+                    'minutes' => (int) ceil($seconds / 60),
+                ]),
+            ]);
         }
 
-        return back()->withErrors([
-            'email' => __('auth.failed'),
-        ])->onlyInput('email');
+        if (! Auth::attempt($validated, (bool) $request->boolean('remember'))) {
+            RateLimiter::hit($key, 60);
+
+            return back()->withErrors([
+                'email' => __('auth.failed'),
+            ])->onlyInput('email');
+        }
+
+        RateLimiter::clear($key);
+        $request->session()->regenerate();
+
+        $user = Auth::user();
+        if ($user && Hash::needsRehash($user->password)) {
+            $user->forceFill([
+                'password' => $validated['password'],
+            ])->save();
+        }
+
+        return redirect()->intended(route('usercp.index'))->with('success', __('auth.logged_in'));
     }
 
     public function showRegisterForm()
@@ -55,7 +80,7 @@ class AuthController extends Controller
         $user = User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
-            'password' => bcrypt($validated['password']),
+            'password' => $validated['password'],
         ]);
 
         if (class_exists(\Spatie\Permission\Models\Role::class)) {
@@ -77,6 +102,6 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('home');
+        return redirect()->route('home')->with('success', __('auth.logged_out'));
     }
 }

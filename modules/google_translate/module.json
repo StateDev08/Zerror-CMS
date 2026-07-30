@@ -1,0 +1,6 @@
+{
+    "id": "google_translate",
+    "name": "Google Translate",
+    "version": "1.0.0",
+    "description": "Sprachwähler im Top-Menü – übersetzt die gesamte Website (alle Seiten) per Google Translate."
+}

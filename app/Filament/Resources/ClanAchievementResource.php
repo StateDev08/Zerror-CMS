@@ -2,9 +2,10 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Forms\CmsRichEditor;
+
 use App\Models\ClanAchievement;
 use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
@@ -15,19 +16,23 @@ use Filament\Tables\Table;
 
 class ClanAchievementResource extends Resource
 {
+    use \App\Filament\Concerns\ChecksCmsPermissions;
+
     protected static ?string $model = ClanAchievement::class;
 
     protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-star';
 
-    protected static ?string $navigationLabel = 'Clan Erfolge';
+    protected static ?string $navigationLabel = 'Erfolge';
 
     protected static \UnitEnum|string|null $navigationGroup = 'Clan';
+
+    protected static ?int $navigationSort = 60;
 
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
             TextInput::make('title')->required(),
-            Textarea::make('description')->nullable()->rows(3),
+            CmsRichEditor::compact('description')->nullable(),
             TextInput::make('icon')->nullable()->placeholder(__('achievements.icon_placeholder')),
             DatePicker::make('achieved_at')->nullable(),
             Toggle::make('visible')->default(true),

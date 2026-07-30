@@ -17,6 +17,8 @@ use Filament\Tables\Table;
 
 class ClanMemberResource extends Resource
 {
+    use \App\Filament\Concerns\ChecksCmsPermissions;
+
     protected static ?string $model = ClanMember::class;
 
     protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-user-group';
@@ -25,13 +27,22 @@ class ClanMemberResource extends Resource
 
     protected static \UnitEnum|string|null $navigationGroup = 'Clan';
 
+    protected static ?int $navigationSort = 10;
+
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
             TextInput::make('display_name')->required(),
             Select::make('rank_id')->relationship('rank', 'name')->required(),
             TextInput::make('position')->nullable(),
-            FileUpload::make('avatar')->image()->directory('avatars')->nullable(),
+            FileUpload::make('avatar')
+                ->image()
+                ->directory('avatars')
+                ->disk('public')
+                ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/gif', 'image/webp'])
+                ->maxSize(fn () => \App\Support\UploadLimits::imageKb())
+                ->helperText(fn () => __('settings.upload_limit_hint', ['mb' => \App\Support\UploadLimits::imageMb()]))
+                ->nullable(),
             Toggle::make('visible')->default(true),
             TextInput::make('order')->numeric()->default(0),
             Select::make('user_id')->relationship('user', 'name')->nullable(),

@@ -1,0 +1,6 @@
+{
+    "id": "server_status",
+    "name": "Serverstatus",
+    "version": "1.0.0",
+    "description": "Gameserver-Status-Widget. Serverliste im ACP unter Gameserver."
+}

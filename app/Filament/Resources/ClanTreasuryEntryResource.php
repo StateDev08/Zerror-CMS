@@ -5,7 +5,7 @@ namespace App\Filament\Resources;
 use App\Models\ClanTreasuryEntry;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Textarea;
+use App\Filament\Forms\CmsRichEditor;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -14,13 +14,17 @@ use Filament\Tables\Table;
 
 class ClanTreasuryEntryResource extends Resource
 {
+    use \App\Filament\Concerns\ChecksCmsPermissions;
+
     protected static ?string $model = ClanTreasuryEntry::class;
 
     protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-currency-euro';
 
     protected static ?string $navigationLabel = 'Kassenbuch';
 
-    protected static \UnitEnum|string|null $navigationGroup = 'Clan Kasse';
+    protected static \UnitEnum|string|null $navigationGroup = 'Clan';
+
+    protected static ?int $navigationSort = 95;
 
     public static function form(Schema $schema): Schema
     {
@@ -29,7 +33,7 @@ class ClanTreasuryEntryResource extends Resource
             TextInput::make('amount')->numeric()->required()->prefix('€'),
             Select::make('clan_treasury_category_id')->relationship('category', 'name')->nullable()->label('Kategorie'),
             TextInput::make('title')->nullable(),
-            Textarea::make('note')->nullable()->rows(2),
+            CmsRichEditor::compact('note')->nullable(),
             DatePicker::make('entry_date')->required()->default(now()),
         ]);
     }

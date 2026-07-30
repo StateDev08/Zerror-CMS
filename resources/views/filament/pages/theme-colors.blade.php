@@ -1,107 +1,111 @@
 <x-filament-panels::page>
-    <form wire:submit="save" class="space-y-6">
-        <x-filament::section>
-            <x-slot name="heading">Farben</x-slot>
-            <x-slot name="description">Theme-Farben für das Frontend (Hex, z. B. #3b82f6).</x-slot>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <label class="block text-sm font-medium mb-1">Primärfarbe</label>
-                    <div class="flex flex-wrap items-center gap-4">
-                        <input type="color" wire:model="primary" class="h-12 w-20 cursor-pointer rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 p-1">
-                        <input type="text" wire:model="primary" class="filament-input block w-32 rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-800 text-sm" placeholder="#3b82f6" maxlength="7">
-                    </div>
-                    @error('primary') <span class="text-danger-600 text-sm">{{ $message }}</span> @enderror
-                </div>
-                <div>
-                    <label class="block text-sm font-medium mb-1">Akzentfarbe</label>
-                    <div class="flex flex-wrap items-center gap-4">
-                        <input type="color" wire:model="accent" class="h-12 w-20 cursor-pointer rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 p-1">
-                        <input type="text" wire:model="accent" class="filament-input block w-32 rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-800 text-sm" placeholder="#10b981" maxlength="7">
-                    </div>
-                    @error('accent') <span class="text-danger-600 text-sm">{{ $message }}</span> @enderror
-                </div>
-                <div>
-                    <label class="block text-sm font-medium mb-1">Hintergrund</label>
-                    <div class="flex flex-wrap items-center gap-4">
-                        <input type="color" wire:model="background" class="h-12 w-20 cursor-pointer rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 p-1">
-                        <input type="text" wire:model="background" class="filament-input block w-32 rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-800 text-sm" placeholder="#f9fafb" maxlength="7">
-                    </div>
-                    @error('background') <span class="text-danger-600 text-sm">{{ $message }}</span> @enderror
-                </div>
-                <div>
-                    <label class="block text-sm font-medium mb-1">Flächenfarbe (Surface)</label>
-                    <div class="flex flex-wrap items-center gap-4">
-                        <input type="color" wire:model="surface" class="h-12 w-20 cursor-pointer rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 p-1">
-                        <input type="text" wire:model="surface" class="filament-input block w-32 rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-800 text-sm" placeholder="#ffffff" maxlength="7">
-                    </div>
-                    @error('surface') <span class="text-danger-600 text-sm">{{ $message }}</span> @enderror
-                </div>
-                <div>
-                    <label class="block text-sm font-medium mb-1">Textfarbe</label>
-                    <div class="flex flex-wrap items-center gap-4">
-                        <input type="color" wire:model="text" class="h-12 w-20 cursor-pointer rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 p-1">
-                        <input type="text" wire:model="text" class="filament-input block w-32 rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-800 text-sm" placeholder="#111827" maxlength="7">
-                    </div>
-                    @error('text') <span class="text-danger-600 text-sm">{{ $message }}</span> @enderror
-                </div>
-                <div>
-                    <label class="block text-sm font-medium mb-1">Gedämpfte Textfarbe</label>
-                    <div class="flex flex-wrap items-center gap-4">
-                        <input type="color" wire:model="text_muted" class="h-12 w-20 cursor-pointer rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 p-1">
-                        <input type="text" wire:model="text_muted" class="filament-input block w-32 rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-800 text-sm" placeholder="#6b7280" maxlength="7">
-                    </div>
-                    @error('text_muted') <span class="text-danger-600 text-sm">{{ $message }}</span> @enderror
-                </div>
-            </div>
-        </x-filament::section>
+    <div class="zc-page">
+        <div class="zc-help">
+            <p>{{ __('zerrocms.theme_editor.intro') }}</p>
+            <p class="zc-help-tip">{{ __('zerrocms.theme_editor.help_page') }}</p>
+            @include('filament.partials.zc-context-links')
+        </div>
 
-        <x-filament::section>
-            <x-slot name="heading">Dark-Mode</x-slot>
-            <x-slot name="description">Standard-Anzeige für Besucher ohne gespeicherte Präferenz (Cookie).</x-slot>
-            <div>
-                <label class="block text-sm font-medium mb-1">Standard-Anzeige</label>
-                <select wire:model="default_theme_mode" class="filament-input block w-64 rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-800 text-sm">
-                    <option value="system">System (Browser-Einstellung)</option>
-                    <option value="light">Hell</option>
-                    <option value="dark">Dunkel</option>
-                </select>
-                @error('default_theme_mode') <span class="text-danger-600 text-sm">{{ $message }}</span> @enderror
-            </div>
-        </x-filament::section>
+        <form wire:submit="save" class="zc-page">
+            <x-filament::section>
+                <x-slot name="heading">{{ __('zerrocms.theme_editor.colors_heading') }}</x-slot>
+                <x-slot name="description">{{ __('zerrocms.theme_editor.colors_help') }}</x-slot>
+                <div class="zc-color-grid">
+                    @foreach([
+                        'primary' => ['label' => __('zerrocms.theme_editor.primary'), 'help' => __('zerrocms.theme_editor.primary_help'), 'ph' => '#3b82f6'],
+                        'accent' => ['label' => __('zerrocms.theme_editor.accent'), 'help' => __('zerrocms.theme_editor.accent_help'), 'ph' => '#10b981'],
+                        'background' => ['label' => __('zerrocms.theme_editor.background'), 'help' => __('zerrocms.theme_editor.background_help'), 'ph' => '#0c100e'],
+                        'surface' => ['label' => __('zerrocms.theme_editor.surface'), 'help' => __('zerrocms.theme_editor.surface_help'), 'ph' => '#161c18'],
+                        'text' => ['label' => __('zerrocms.theme_editor.text'), 'help' => __('zerrocms.theme_editor.text_help'), 'ph' => '#e8f5e9'],
+                        'text_muted' => ['label' => __('zerrocms.theme_editor.text_muted'), 'help' => __('zerrocms.theme_editor.text_muted_help'), 'ph' => '#9cba9f'],
+                    ] as $field => $meta)
+                        <div class="zc-color-item">
+                            <label>{{ $meta['label'] }}</label>
+                            <div class="zc-field-help">{{ $meta['help'] }}</div>
+                            <div class="zc-color-row">
+                                <input type="color" wire:model.live="{{ $field }}" aria-label="{{ $meta['label'] }}">
+                                <input type="text" wire:model.live="{{ $field }}" placeholder="{{ $meta['ph'] }}" maxlength="7" aria-label="{{ $meta['label'] }} Hex">
+                            </div>
+                            @error($field) <span style="color:#dc2626;font-size:0.8rem">{{ $message }}</span> @enderror
+                        </div>
+                    @endforeach
+                </div>
+            </x-filament::section>
 
-        <x-filament::section>
-            <x-slot name="heading">Layout</x-slot>
-            <x-slot name="description">Position der Bereiche: Nav-Sidebar, Widget-Sidebar und Reihenfolge im Hauptbereich.</x-slot>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div>
-                    <label class="block text-sm font-medium mb-1">Nav-Sidebar (Menü)</label>
-                    <select wire:model="nav_sidebar_position" class="filament-input block w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-800 text-sm">
-                        <option value="left">Links</option>
-                        <option value="right">Rechts</option>
-                    </select>
-                    @error('nav_sidebar_position') <span class="text-danger-600 text-sm">{{ $message }}</span> @enderror
+            <x-filament::section>
+                <x-slot name="heading">{{ __('zerrocms.theme_editor.fonts_heading') }}</x-slot>
+                <x-slot name="description">{{ __('zerrocms.theme_editor.fonts_help') }}</x-slot>
+                <div class="zc-color-grid">
+                    <div class="zc-field">
+                        <label for="font_display">{{ __('zerrocms.theme_editor.font_display') }}</label>
+                        <span class="zc-field-help">{{ __('zerrocms.theme_editor.font_display_help') }}</span>
+                        <input id="font_display" type="text" wire:model="font_display" maxlength="120">
+                        @error('font_display') <span style="color:#dc2626;font-size:0.8rem">{{ $message }}</span> @enderror
+                    </div>
+                    <div class="zc-field">
+                        <label for="font_body">{{ __('zerrocms.theme_editor.font_body') }}</label>
+                        <span class="zc-field-help">{{ __('zerrocms.theme_editor.font_body_help') }}</span>
+                        <input id="font_body" type="text" wire:model="font_body" maxlength="120">
+                        @error('font_body') <span style="color:#dc2626;font-size:0.8rem">{{ $message }}</span> @enderror
+                    </div>
+                    <div class="zc-field" style="grid-column:1/-1">
+                        <label for="font_url">{{ __('zerrocms.theme_editor.font_url') }}</label>
+                        <span class="zc-field-help">{{ __('zerrocms.theme_editor.font_url_help') }}</span>
+                        <input id="font_url" type="url" wire:model="font_url" maxlength="500" placeholder="https://fonts.googleapis.com/css2?...">
+                        @error('font_url') <span style="color:#dc2626;font-size:0.8rem">{{ $message }}</span> @enderror
+                    </div>
                 </div>
-                <div>
-                    <label class="block text-sm font-medium mb-1">Widget-Sidebar</label>
-                    <select wire:model="widget_sidebar_position" class="filament-input block w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-800 text-sm">
-                        <option value="left">Links</option>
-                        <option value="right">Rechts</option>
-                    </select>
-                    @error('widget_sidebar_position') <span class="text-danger-600 text-sm">{{ $message }}</span> @enderror
-                </div>
-                <div>
-                    <label class="block text-sm font-medium mb-1">Reihenfolge im Hauptbereich</label>
-                    <select wire:model="main_order" class="filament-input block w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-800 text-sm">
-                        <option value="content_first">Inhalt zuerst, dann Widgets</option>
-                        <option value="widgets_first">Widgets zuerst, dann Inhalt</option>
-                    </select>
-                    @error('main_order') <span class="text-danger-600 text-sm">{{ $message }}</span> @enderror
-                </div>
-            </div>
-        </x-filament::section>
+            </x-filament::section>
 
-        <x-filament::button type="submit" wire:loading.attr="disabled">
-            Speichern
-        </x-filament::button>
-    </form>
+            <x-filament::section>
+                <x-slot name="heading">{{ __('zerrocms.theme_editor.mode_heading') }}</x-slot>
+                <x-slot name="description">{{ __('zerrocms.theme_editor.mode_help') }}</x-slot>
+                            <div class="zc-field" style="max-width:24rem">
+                                <label for="default_theme_mode">{{ __('zerrocms.theme_editor.mode_label') }}</label>
+                                <span class="zc-field-help">Gilt für Frontend und Admin-Panel. Bei „Dunkel“ bleibt der Admin nach F5 dunkel.</span>
+                                <select id="default_theme_mode" wire:model="default_theme_mode">
+                                    <option value="system">{{ __('zerrocms.theme_editor.mode_system') }}</option>
+                                    <option value="light">{{ __('zerrocms.theme_editor.mode_light') }}</option>
+                                    <option value="dark">{{ __('zerrocms.theme_editor.mode_dark') }}</option>
+                                </select>
+                            </div>
+            </x-filament::section>
+
+            <x-filament::section>
+                <x-slot name="heading">{{ __('zerrocms.theme_editor.layout_heading') }}</x-slot>
+                <x-slot name="description">{{ __('zerrocms.theme_editor.layout_help') }}</x-slot>
+                <div class="zc-color-grid">
+                    <div class="zc-field">
+                        <label for="nav_sidebar_position">{{ __('zerrocms.theme_editor.nav_sidebar') }}</label>
+                        <span class="zc-field-help">{{ __('zerrocms.theme_editor.nav_sidebar_help') }}</span>
+                        <select id="nav_sidebar_position" wire:model="nav_sidebar_position">
+                            <option value="left">{{ __('zerrocms.theme_editor.left') }}</option>
+                            <option value="right">{{ __('zerrocms.theme_editor.right') }}</option>
+                        </select>
+                    </div>
+                    <div class="zc-field">
+                        <label for="widget_sidebar_position">{{ __('zerrocms.theme_editor.widget_sidebar') }}</label>
+                        <span class="zc-field-help">{{ __('zerrocms.theme_editor.widget_sidebar_help') }}</span>
+                        <select id="widget_sidebar_position" wire:model="widget_sidebar_position">
+                            <option value="left">{{ __('zerrocms.theme_editor.left') }}</option>
+                            <option value="right">{{ __('zerrocms.theme_editor.right') }}</option>
+                        </select>
+                    </div>
+                    <div class="zc-field">
+                        <label for="main_order">{{ __('zerrocms.theme_editor.main_order') }}</label>
+                        <span class="zc-field-help">{{ __('zerrocms.theme_editor.main_order_help') }}</span>
+                        <select id="main_order" wire:model="main_order">
+                            <option value="content_first">{{ __('zerrocms.theme_editor.content_first') }}</option>
+                            <option value="widgets_first">{{ __('zerrocms.theme_editor.widgets_first') }}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="zc-note" style="margin-top:0.85rem">{{ __('zerrocms.theme_editor.layout_note') }}</div>
+            </x-filament::section>
+
+            <x-filament::button type="submit" wire:loading.attr="disabled">
+                {{ __('zerrocms.theme_editor.save') }}
+            </x-filament::button>
+        </form>
+    </div>
 </x-filament-panels::page>

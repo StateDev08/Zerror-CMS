@@ -1,0 +1,33 @@
+[
+    {
+        "key": "title",
+        "type": "text",
+        "label": "Widget-Titel",
+        "default": "Musik"
+    },
+    {
+        "key": "autoplay",
+        "type": "boolean",
+        "label": "Autoplay",
+        "default": false,
+        "help": "Browser blockieren Autoplay oft ohne Nutzerinteraktion. Titel unter Inhalte → Musik pflegen."
+    },
+    {
+        "key": "loop",
+        "type": "boolean",
+        "label": "Playlist wiederholen",
+        "default": true
+    },
+    {
+        "key": "volume",
+        "type": "number",
+        "label": "Lautstärke (0–100)",
+        "default": 70
+    },
+    {
+        "key": "show_controls",
+        "type": "boolean",
+        "label": "Browser-Controls anzeigen",
+        "default": true
+    }
+]

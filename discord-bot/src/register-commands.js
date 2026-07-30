@@ -35,6 +35,13 @@ const commands = [
     name: 'spieler',
     description: 'Zeigt deinen verknüpften Spieler/User von der Website an (wenn verknüpft)',
   },
+  {
+    name: 'link',
+    description: 'Verknüpfe deinen Discord-Account mit der Website (Token aus UserCP)',
+    options: [
+      { type: 3, name: 'token', description: 'Link-Token aus dem UserCP der Website', required: true },
+    ],
+  },
 ];
 
 async function main() {

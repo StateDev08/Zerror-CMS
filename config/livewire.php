@@ -130,7 +130,8 @@ return [
 
     'temporary_file_upload' => [
         'disk' => env('LIVEWIRE_TEMPORARY_FILE_UPLOAD_DISK', 'local'),
-        'rules' => ['required', 'file', 'max:10240'],
+        // Kein hartes MB-Limit hier – greift über AppServiceProvider aus ACP (UploadLimits).
+        'rules' => ['required', 'file'],
         'directory' => null,
         'middleware' => null,
         'preview_mimes' => [                                  // Supported file types for temporary pre-signed file URLs...

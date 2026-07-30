@@ -1,0 +1,96 @@
+/* CMS Toasts – global success / error / warning / info */
+.cms-toast-host {
+    position: fixed;
+    z-index: 2147483000;
+    right: max(0.85rem, env(safe-area-inset-right));
+    bottom: max(0.85rem, env(safe-area-inset-bottom));
+    left: auto;
+    top: auto;
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: flex-end;
+    gap: 0.55rem;
+    width: min(22.5rem, calc(100vw - 1.5rem));
+    max-width: calc(100vw - 1.5rem);
+    pointer-events: none;
+}
+.cms-toast {
+    pointer-events: auto;
+    width: 100%;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 0.65rem;
+    align-items: start;
+    padding: 0.85rem 0.9rem;
+    border-radius: 0.75rem;
+    border: 1px solid transparent;
+    color: #f4f1ea;
+    background: #1a1f28;
+    box-shadow:
+        0 16px 40px rgba(0, 0, 0, 0.45),
+        0 0 0 1px rgba(255, 255, 255, 0.04);
+    font-size: 0.9rem;
+    line-height: 1.4;
+    transform: translateY(0.75rem);
+    opacity: 0;
+    transition: transform .22s ease, opacity .22s ease;
+}
+.cms-toast.is-in {
+    transform: translateY(0);
+    opacity: 1;
+}
+.cms-toast.is-out {
+    transform: translateY(0.5rem);
+    opacity: 0;
+}
+.cms-toast__icon {
+    width: 1.35rem;
+    height: 1.35rem;
+    margin-top: 0.05rem;
+    flex-shrink: 0;
+}
+.cms-toast__msg {
+    margin: 0;
+    word-break: break-word;
+    font-weight: 550;
+}
+.cms-toast__x {
+    border: 0;
+    background: transparent;
+    color: inherit;
+    opacity: 0.65;
+    cursor: pointer;
+    font-size: 1.15rem;
+    line-height: 1;
+    padding: 0 0.15rem;
+}
+.cms-toast__x:hover { opacity: 1; }
+.cms-toast--success {
+    background: linear-gradient(180deg, #1c3a28, #15261c);
+    border-color: rgba(98, 192, 108, 0.45);
+    color: #d8f5dd;
+}
+.cms-toast--error {
+    background: linear-gradient(180deg, #3a1c1c, #261515);
+    border-color: rgba(248, 113, 113, 0.5);
+    color: #ffe0e0;
+}
+.cms-toast--warning {
+    background: linear-gradient(180deg, #3a3018, #261f10);
+    border-color: rgba(234, 179, 8, 0.5);
+    color: #ffe9b0;
+}
+.cms-toast--info {
+    background: linear-gradient(180deg, #1a2740, #141c2c);
+    border-color: rgba(96, 165, 250, 0.45);
+    color: #dbeafe;
+}
+@media (max-width: 640px) {
+    .cms-toast-host {
+        right: max(0.65rem, env(safe-area-inset-right));
+        left: max(0.65rem, env(safe-area-inset-left));
+        width: auto;
+        max-width: none;
+        bottom: max(5.5rem, calc(env(safe-area-inset-bottom) + 4.75rem));
+    }
+}

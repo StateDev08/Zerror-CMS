@@ -75,6 +75,25 @@ class PluginManager
         if (! isset($discovered[$name])) {
             return;
         }
+
+        $path = $this->pluginsPath.DIRECTORY_SEPARATOR.$name;
+        $localProvider = $path.DIRECTORY_SEPARATOR.'PluginServiceProvider.php';
+        if (File::exists($localProvider)) {
+            try {
+                $providerClass = require $localProvider;
+                if (is_string($providerClass) && class_exists($providerClass)) {
+                    app()->register($providerClass);
+                }
+            } catch (\Throwable $e) {
+                report($e);
+
+                return;
+            }
+            $this->booted[$name] = true;
+
+            return;
+        }
+
         $manifest = $discovered[$name]['manifest'] ?? [];
         $providerClass = $manifest['provider'] ?? null;
         if ($providerClass && class_exists($providerClass)) {
@@ -105,7 +124,40 @@ class PluginManager
             return [];
         }
         $schema = $discovered[$name]['manifest']['configSchema'];
-        return is_array($schema) ? $schema : [];
+        if (! is_array($schema)) {
+            return [];
+        }
+
+        return $this->normalizeSchema($schema);
+    }
+
+    /**
+     * @param  array<int|string, mixed>  $schema
+     * @return array<int, array{key: string, type: string, label: string, default?: mixed, help?: string}>
+     */
+    protected function normalizeSchema(array $schema): array
+    {
+        $out = [];
+        foreach ($schema as $key => $item) {
+            if (! is_array($item)) {
+                continue;
+            }
+            if (! isset($item['key']) && ! isset($item['type']) && is_string($key)) {
+                $item['key'] = $key;
+            }
+            $fieldKey = (string) ($item['key'] ?? '');
+            if ($fieldKey === '') {
+                continue;
+            }
+            $item['key'] = $fieldKey;
+            $item['type'] = (string) ($item['type'] ?? 'text');
+            if (empty($item['label'])) {
+                $item['label'] = \Illuminate\Support\Str::headline(str_replace('_', ' ', $fieldKey));
+            }
+            $out[] = $item;
+        }
+
+        return $out;
     }
 
     public function registerHeadHtml(callable $fn): void

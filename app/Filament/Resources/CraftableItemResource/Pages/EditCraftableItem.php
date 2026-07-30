@@ -3,7 +3,7 @@
 namespace App\Filament\Resources\CraftableItemResource\Pages;
 
 use App\Filament\Resources\CraftableItemResource;
-use Filament\Resources\Pages\EditRecord;
+use App\Filament\Resources\Pages\EditRecord;
 
 class EditCraftableItem extends EditRecord
 {

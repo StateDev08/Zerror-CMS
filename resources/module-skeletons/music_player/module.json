@@ -1,0 +1,6 @@
+{
+    "id": "music_player",
+    "name": "MP3 Musicplayer",
+    "version": "1.1.0",
+    "description": "Sidebar-Playlist-Player. Titel und MP3s unter Inhalte → Musik verwalten; Widget-Optionen im Modul."
+}

@@ -64,27 +64,40 @@ class DiscordBotController extends Controller
         ]);
     }
 
-    /** Discord-ID mit User verknüpfen (z. B. nach /link im Discord). */
+    /** Discord-ID mit User verknüpfen (nur mit gültigem Link-Token aus UserCP). */
     public function linkDiscord(Request $request): JsonResponse
     {
         $discordId = $request->input('discord_id');
-        $userId = $request->input('user_id');
-        $token = $request->input('link_token'); // Optional: einmaliger Token aus UserCP
+        $token = $request->input('link_token');
 
         if (! $discordId) {
             return response()->json(['error' => 'discord_id required'], 400);
         }
 
-        // Wenn user_id + optional link_token: Verknüpfung von Website aus
-        if ($userId) {
-            $user = User::find($userId);
-            if (! $user) {
-                return response()->json(['error' => 'user not found'], 404);
-            }
-            $user->update(['discord_id' => $discordId]);
-            return response()->json(['success' => true, 'message' => 'Discord verknüpft']);
+        if (! $token || ! is_string($token)) {
+            return response()->json(['error' => 'link_token required'], 400);
         }
 
-        return response()->json(['error' => 'user_id or link_token required'], 400);
+        $user = User::where('discord_link_token', $token)
+            ->where('discord_link_token_expires_at', '>', now())
+            ->first();
+
+        if (! $user) {
+            return response()->json(['error' => 'invalid or expired link_token'], 404);
+        }
+
+        $data = [
+            'discord_id' => (string) $discordId,
+            'discord_link_token' => null,
+            'discord_link_token_expires_at' => null,
+        ];
+
+        if ($request->filled('discord_handle')) {
+            $data['discord_handle'] = (string) $request->input('discord_handle');
+        }
+
+        $user->update($data);
+
+        return response()->json(['success' => true, 'message' => 'Discord verknüpft']);
     }
 }

@@ -3,7 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Models\ClanRule;
-use Filament\Forms\Components\RichEditor;
+use App\Filament\Forms\CmsRichEditor;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
@@ -14,19 +14,23 @@ use Filament\Tables\Table;
 
 class ClanRuleResource extends Resource
 {
+    use \App\Filament\Concerns\ChecksCmsPermissions;
+
     protected static ?string $model = ClanRule::class;
 
     protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-document-text';
 
-    protected static ?string $navigationLabel = 'Clan Regeln';
+    protected static ?string $navigationLabel = 'Regeln';
 
     protected static \UnitEnum|string|null $navigationGroup = 'Clan';
+
+    protected static ?int $navigationSort = 55;
 
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
             TextInput::make('title')->required(),
-            RichEditor::make('content')->required()->columnSpanFull(),
+            CmsRichEditor::make('content')->required(),
             Toggle::make('visible')->default(true),
             TextInput::make('order')->numeric()->default(0),
         ]);

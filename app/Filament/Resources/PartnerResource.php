@@ -2,9 +2,10 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Forms\CmsRichEditor;
+
 use App\Models\Partner;
 use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -14,6 +15,8 @@ use Filament\Tables\Table;
 
 class PartnerResource extends Resource
 {
+    use \App\Filament\Concerns\ChecksCmsPermissions;
+
     protected static ?string $model = Partner::class;
 
     protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-hand-raised';
@@ -22,13 +25,21 @@ class PartnerResource extends Resource
 
     protected static \UnitEnum|string|null $navigationGroup = 'Inhalte';
 
+    protected static ?int $navigationSort = 60;
+
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
             TextInput::make('name')->required(),
             TextInput::make('url')->url()->required(),
-            FileUpload::make('logo')->image()->directory('partners')->disk('public'),
-            Textarea::make('description')->nullable()->rows(2),
+            FileUpload::make('logo')
+                ->image()
+                ->directory('partners')
+                ->disk('public')
+                ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/gif', 'image/webp'])
+                ->maxSize(fn () => \App\Support\UploadLimits::imageKb())
+                ->helperText(fn () => __('settings.upload_limit_hint', ['mb' => \App\Support\UploadLimits::imageMb()])),
+            CmsRichEditor::compact('description')->nullable(),
             TextInput::make('order')->numeric()->default(0),
         ]);
     }

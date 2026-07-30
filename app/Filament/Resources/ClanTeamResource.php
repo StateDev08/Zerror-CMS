@@ -4,7 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Models\ClanTeam;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Textarea;
+use App\Filament\Forms\CmsRichEditor;
 use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -15,20 +15,24 @@ use Illuminate\Support\Str;
 
 class ClanTeamResource extends Resource
 {
+    use \App\Filament\Concerns\ChecksCmsPermissions;
+
     protected static ?string $model = ClanTeam::class;
 
     protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-user-group';
 
-    protected static ?string $navigationLabel = 'Clan Teams';
+    protected static ?string $navigationLabel = 'Teams';
 
     protected static \UnitEnum|string|null $navigationGroup = 'Clan';
+
+    protected static ?int $navigationSort = 30;
 
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
             TextInput::make('name')->required()->live(onBlur: true)->afterStateUpdated(fn ($state, $set) => $set('slug', Str::slug($state))),
             TextInput::make('slug')->required(),
-            Textarea::make('description')->nullable()->rows(4),
+            CmsRichEditor::make('description')->nullable(),
             TextInput::make('contact')->nullable(),
             Toggle::make('visible')->default(true),
             TextInput::make('order')->numeric()->default(0),

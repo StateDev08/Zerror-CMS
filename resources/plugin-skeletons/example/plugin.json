@@ -1,0 +1,22 @@
+{
+    "name": "example",
+    "label": "Example Plugin",
+    "version": "1.0.0",
+    "description": "Beispiel-Plugin für den ZIP-Installer. Fügt optional einen HTML-Kommentar in den Head ein.",
+    "configSchema": [
+        {
+            "key": "enabled",
+            "type": "boolean",
+            "label": "Aktiv",
+            "default": true,
+            "help": "Head-Hinweis laden."
+        },
+        {
+            "key": "note",
+            "type": "text",
+            "label": "Notiz",
+            "default": "ZerroCMS example plugin",
+            "help": "Nur als HTML-Kommentar im Seitenkopf (unsichtbar)."
+        }
+    ]
+}

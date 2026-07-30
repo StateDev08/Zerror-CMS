@@ -1,4 +1,0 @@
-[
-  {"key": "handle", "type": "text", "label": "Twitter/X Handle (ohne @)", "default": ""},
-  {"key": "embed_url", "type": "url", "label": "Embed-URL (optional)", "default": ""}
-]

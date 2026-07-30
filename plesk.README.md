@@ -40,96 +40,53 @@ Wichtig: Es muss immer der Unterordner **`public`** sein, nicht das Projekt-Root
 - Datenbankname und Benutzer anlegen, Passwort notieren.
 - Host ist meist `localhost` (oder der von Plesk angezeigte DB-Server).
 
-### 5. Umgebung (.env)
+### 5. Umgebung (.env) – **nicht manuell nötig**
 
-- Im Projekt-Root (nicht in `public`) eine Datei **`.env`** anlegen (z. B. aus `.env.example` kopieren).
-- **Wenn `/install` „kaputt“ wirkt oder die Anwendung keine .env automatisch anlegen kann:** Beim Aufruf von **https://deine-domain.de/install** erscheint dann eine Seite mit der Überschrift **„.env manuell anlegen“**. Dort steht, dass Sie im Projektordner die Datei `.env` anlegen sollen (Kopie von `.env.example` oder den angezeigten Mindestinhalt übernehmen). Nach dem Anlegen und Speichern von `.env` den Link „Install-Seite erneut aufrufen“ klicken oder erneut `/install` aufrufen.
-- Mindestens setzen:
+Der Web-Installer / Preinstall erledigt das automatisch:
 
-```env
-APP_NAME=ZerroCMS
-APP_ENV=production
-APP_DEBUG=false
-APP_KEY=base64:...   # Muss gesetzt sein (siehe unten: key:generate oder setup-key.php)
-APP_URL=https://deine-domain.de
+1. Domain Document Root auf `…/public` setzen  
+2. In Plesk eine MySQL-Datenbank anlegen (Zugangsdaten für Installer-Schritt 2)  
+3. Projektdateien hochladen (idealerweise **inkl. `vendor/`**, sonst Composer im Browser)  
+4. Im Browser **https://deine-domain.de/** öffnen → Preinstall/Installer  
+5. Falls `vendor/` fehlt: Button „Abhängigkeiten installieren“  
+6. Installer-Schritte durchklicken (DB, Migrate, Site, Admin)
 
-DB_CONNECTION=mysql
-DB_HOST=localhost
-DB_PORT=3306
-DB_DATABASE=dein_db_name
-DB_USERNAME=dein_db_user
-DB_PASSWORD=dein_db_passwort
+SSH-Befehle (`composer`, `key:generate`, `migrate`, Admin per tinker) sind **nicht erforderlich**.
 
-QUEUE_CONNECTION=sync
-SESSION_DRIVER=database
-CACHE_STORE=database
+### 6. Abhängigkeiten (nur Fallback mit SSH)
 
-CLAN_NAME="Dein Clan"
-CLAN_THEME=default
-APPLICATION_NOTIFY_EMAIL=admin@deine-domain.de
-DISCORD_WEBHOOK_URL=
-```
-
-- **Application Key (APP_KEY) unbedingt setzen** – sonst 500 „No application encryption key“ schon beim ersten Aufruf von `/` oder `/install`.  
-  - **Mit SSH:** `php artisan key:generate` (schreibt den Key in `.env`).  
-  - **Ohne SSH:** Einmal **https://deine-domain.de/setup-key.php** im Browser aufrufen – das Skript erzeugt den Key in `.env` und leitet zu `/install` weiter. Danach `public/setup-key.php` aus Sicherheitsgründen löschen.  
-  - Oder Key manuell in `.env` eintragen (Format z. B. `APP_KEY=base64:...`; lokal mit `php artisan key:generate` erzeugen und den Wert kopieren).
-- **Werte mit Leerzeichen in Anführungszeichen:** Wenn `php artisan config:clear` mit **„The environment file is invalid! Encountered unexpected whitespace at [Pax Dei - Lichtbringer Clan]“** abbricht, steht in `.env` ein Wert mit Leerzeichen **ohne** Anführungszeichen. Richtig: `APP_NAME="Pax Dei - Lichtbringer Clan"` und ggf. `CLAN_NAME="Pax Dei - Lichtbringer Clan"` (doppelte Anführungszeichen um den gesamten Wert).
-
-**500 bei Modul- oder Plugin-Seite im Admin:** Tabelle `modules` bzw. `plugins` fehlt → `php artisan migrate --force` ausführen. Wenn die Meldung „Aktion fehlgeschlagen“ oder „Speichern fehlgeschlagen“ erscheint, in `storage/logs/laravel.log` den genauen Fehler prüfen.
-
-### 6. Abhängigkeiten und Laravel-Befehle (per SSH)
-
-Falls SSH verfügbar ist (Plesk: **Tools & Settings** → **Terminal** oder eigener SSH-Zugang):
+Falls SSH verfügbar ist und der Browser-Composer scheitert:
 
 ```bash
-cd /pfad/zum/projekt   # z. B. /var/www/vhosts/deine-domain.de/httpdocs
-
+cd /pfad/zum/projekt
 composer install --no-dev --optimize-autoloader
-npm ci && npm run build   # Frontend-CSS (Tailwind) – vermeidet CDN-Warnung in Produktion
-php artisan migrate --force
-php artisan storage:link
-php artisan config:cache
-php artisan view:cache
 ```
 
-Ohne SSH: Migrationen und `storage:link` müssen über ein einmaliges Deployment-Skript oder den Hoster (z. B. „Run script“) ausgeführt werden – Ablauf wie oben. Ohne Node.js auf dem Server: Assets lokal mit `npm run build` bauen und den Ordner `public/build/` mit hochladen.
+Ohne SSH und ohne `proc_open`: Release-ZIP **inklusive `vendor/`** und idealerweise `public/build/` hochladen.
 
-### 7. Admin-Benutzer anlegen
+### 7. Admin-Benutzer
 
-Einmalig (per SSH oder z. B. Plesk „Run script“):
-
-```bash
-php artisan tinker
->>> \App\Models\User::create(['name' => 'Admin', 'email' => 'admin@deine-domain.de', 'password' => bcrypt('dein-sicheres-passwort')]);
->>> exit
-```
-
-Anschließend unter **https://deine-domain.de/admin** einloggen.
+Wird im letzten Installer-Schritt angelegt. Danach: **https://deine-domain.de/admin**
 
 ### 8. Schreibrechte
 
-- Laravel braucht Schreibrechte auf `storage/` und `bootstrap/cache/`.
-- Unter Plesk läuft PHP oft als Domain-Benutzer; dann reichen übliche Rechte (z. B. 755 für Verzeichnisse, 644 für Dateien). Bei Berechtigungsfehlern: `storage` und `bootstrap/cache` für den Webserver-Benutzer beschreibbar machen (z. B. 775).
+- Laravel braucht Schreibrechte auf `storage/` und `bootstrap/cache/` (und Schreibrecht im Projektroot für `.env`).
+- Unter Plesk: Domänenbenutzer, typisch 755/644; bei Problemen `storage` und `bootstrap/cache` auf 775.
 
 ### 9. Queue (optional)
 
-ZerroCMS ist mit **`QUEUE_CONNECTION=sync`** betriebsbereit (kein Redis/Cron nötig). Wenn du später auf eine Queue (z. B. `database`) wechselst, in Plesk einen **Cron-Job** einrichten:
+ZerroCMS ist mit **`QUEUE_CONNECTION=sync`** betriebsbereit (kein Redis/Cron nötig).
 
-- **Domains** → deine Domain → **Scheduled Tasks** (oder **Cron Jobs**).
-- Befehl: `php /pfad/zum/projekt/artisan queue:work --stop-when-empty` oder dauerhaft `queue:work` (je nach Konfiguration).
-
-## Kurz-Checkliste
+## Kurz-Checkliste (ohne SSH)
 
 | Schritt | Aktion |
 |--------|--------|
-| 1 | Document Root auf `public/` zeigen |
-| 2 | PHP 8.2+ und nötige Extensions aktivieren |
-| 3 | Projekt-Dateien hochladen |
-| 4 | MySQL-Datenbank anlegen |
-| 5 | `.env` anlegen und anpassen, `APP_KEY` setzen |
-| 6 | `composer install --no-dev`, `npm run build`, `migrate`, `storage:link`, `config:cache` |
-| 7 | Admin-User anlegen, unter `/admin` testen |
+| 1 | Document Root auf `public/` |
+| 2 | PHP 8.2+ + Extensions |
+| 3 | Dateien hochladen (besser inkl. `vendor/`) |
+| 4 | MySQL-Datenbank in Plesk anlegen |
+| 5 | Browser: Domain öffnen → Preinstall/Installer |
+| 6 | Admin unter `/admin` testen |
 
 ## Fehlerbehebung (403 / 500)
 

@@ -1,0 +1,22 @@
+[
+    {
+        "key": "page_language",
+        "type": "text",
+        "label": "Originalsprache (ISO)",
+        "default": "de",
+        "help": "Sprache der Website (z. B. de). Alle normalen Seiten nutzen diese Quellsprache für den Sprachumschalter."
+    },
+    {
+        "key": "included_languages",
+        "type": "text",
+        "label": "Zielsprachen (Komma-getrennt)",
+        "default": "en,fr,es,it,pl,nl,pt,ru,tr,uk,zh-CN,ja,ko,ar,cs,da,fi,sv,hu,ro,el,hi,vi,id",
+        "help": "ISO-Codes kommagetrennt. Erscheinen als Dropdown im Menü."
+    },
+    {
+        "key": "show_label",
+        "type": "boolean",
+        "label": "Label „Sprache“ anzeigen",
+        "default": true
+    }
+]

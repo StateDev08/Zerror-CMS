@@ -3,7 +3,7 @@
 namespace App\Filament\Resources\ClanAchievementResource\Pages;
 
 use App\Filament\Resources\ClanAchievementResource;
-use Filament\Resources\Pages\EditRecord;
+use App\Filament\Resources\Pages\EditRecord;
 
 class EditClanAchievement extends EditRecord
 {

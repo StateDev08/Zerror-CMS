@@ -1,0 +1,29 @@
+[
+    {
+        "key": "label",
+        "type": "text",
+        "label": "Beschriftung",
+        "default": "Besucher",
+        "help": "Text vor der Zahl im Footer."
+    },
+    {
+        "key": "start_value",
+        "type": "text",
+        "label": "Startwert",
+        "default": "0",
+        "help": "Wird nur genutzt, wenn noch kein Zähler in der Datenbank existiert."
+    },
+    {
+        "key": "unique_per_session",
+        "type": "boolean",
+        "label": "Nur einmal pro Sitzung zählen",
+        "default": true,
+        "help": "An: ein Besucher zählt einmal pro Browser-Session. Aus: jeder Seitenaufruf zählt."
+    },
+    {
+        "key": "show_label",
+        "type": "boolean",
+        "label": "Beschriftung anzeigen",
+        "default": true
+    }
+]

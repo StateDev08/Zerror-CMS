@@ -12,13 +12,17 @@ use Illuminate\Support\Str;
 
 class DownloadCategoryResource extends Resource
 {
+    use \App\Filament\Concerns\ChecksCmsPermissions;
+
     protected static ?string $model = DownloadCategory::class;
 
     protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-folder';
 
-    protected static ?string $navigationLabel = 'Kategorien';
+    protected static ?string $navigationLabel = 'Download-Kategorien';
 
-    protected static \UnitEnum|string|null $navigationGroup = 'Downloads';
+    protected static \UnitEnum|string|null $navigationGroup = 'Community';
+
+    protected static ?int $navigationSort = 40;
 
     public static function form(Schema $schema): Schema
     {

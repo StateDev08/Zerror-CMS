@@ -11,6 +11,8 @@ use Filament\Tables\Table;
 
 class NewsletterSubscriberResource extends Resource
 {
+    use \App\Filament\Concerns\ChecksCmsPermissions;
+
     protected static ?string $model = NewsletterSubscriber::class;
 
     protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-envelope';
@@ -18,6 +20,8 @@ class NewsletterSubscriberResource extends Resource
     protected static ?string $navigationLabel = 'Newsletter-Abonnenten';
 
     protected static \UnitEnum|string|null $navigationGroup = 'Inhalte';
+
+    protected static ?int $navigationSort = 80;
 
     public static function form(Schema $schema): Schema
     {

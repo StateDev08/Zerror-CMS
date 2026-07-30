@@ -2,17 +2,22 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Forms\CmsRichEditor;
 use App\Models\ClanFeedback;
+use App\Support\HtmlContent;
+use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Support\HtmlString;
 
 class ClanFeedbackResource extends Resource
 {
+    use \App\Filament\Concerns\ChecksCmsPermissions;
+
     protected static ?string $model = ClanFeedback::class;
 
     protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-chat-bubble-left-right';
@@ -26,13 +31,18 @@ class ClanFeedbackResource extends Resource
         return $schema->components([
             TextInput::make('author_name')->required()->disabled(),
             TextInput::make('author_email')->email()->disabled(),
-            Textarea::make('message')->required()->disabled()->rows(4),
+            Placeholder::make('message_html')
+                ->label(__('clan.feedback_message'))
+                ->content(fn (?ClanFeedback $record): HtmlString => $record
+                    ? HtmlContent::toHtml($record->message)
+                    : new HtmlString(''))
+                ->columnSpanFull(),
             Select::make('status')->options([
                 'new' => 'Neu',
                 'read' => 'Gelesen',
                 'done' => 'Erledigt',
             ])->required(),
-            Textarea::make('admin_notes')->nullable()->rows(3),
+            CmsRichEditor::compact('admin_notes')->nullable()->label('Admin-Notizen'),
         ]);
     }
 
@@ -41,7 +51,9 @@ class ClanFeedbackResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('author_name'),
-                TextColumn::make('message')->limit(40),
+                TextColumn::make('message')
+                    ->formatStateUsing(fn (?string $state): string => \App\Support\HtmlContent::plainText($state))
+                    ->limit(40),
                 TextColumn::make('status')->badge(),
                 TextColumn::make('created_at')->dateTime(),
             ])

@@ -2,16 +2,22 @@
 
 namespace App\Filament\Resources;
 
+use App\Support\PermissionCatalog;
+use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
 class RoleResource extends Resource
 {
+    use \App\Filament\Concerns\ChecksCmsPermissions;
+
     protected static ?string $model = Role::class;
 
     protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-shield-check';
@@ -22,24 +28,41 @@ class RoleResource extends Resource
 
     protected static ?string $pluralModelLabel = 'Rollen';
 
-    protected static \UnitEnum|string|null $navigationGroup = 'Rechteverwaltung';
-    protected static ?int $navigationSort = 2;
+    protected static \UnitEnum|string|null $navigationGroup = 'Benutzer';
+
+    protected static ?int $navigationSort = 20;
 
     public static function form(Schema $schema): Schema
     {
+        $labels = PermissionCatalog::labels();
+
         return $schema->components([
-            TextInput::make('name')->required()->maxLength(255)->label('Name'),
-            Select::make('guard_name')
-                ->options(['web' => 'Web'])
-                ->default('web')
-                ->required()
-                ->label('Guard'),
-            Select::make('permissions')
-                ->relationship('permissions', 'name')
-                ->multiple()
-                ->preload()
-                ->searchable()
-                ->label('Berechtigungen'),
+            Section::make('Rolle')
+                ->schema([
+                    TextInput::make('name')->required()->maxLength(255)->label('Name'),
+                    Select::make('guard_name')
+                        ->options(['web' => 'Web'])
+                        ->default('web')
+                        ->required()
+                        ->label('Guard'),
+                ]),
+            Section::make('Berechtigungen')
+                ->description('Rechte für alle CMS-Bereiche. Super-Admin besitzt automatisch alles.')
+                ->schema([
+                    CheckboxList::make('permissions')
+                        ->label('Rechte')
+                        ->relationship(
+                            name: 'permissions',
+                            titleAttribute: 'name',
+                            modifyQueryUsing: fn ($query) => $query->orderBy('name'),
+                        )
+                        ->getOptionLabelFromRecordUsing(
+                            fn (Permission $record): string => $labels[$record->name] ?? $record->name
+                        )
+                        ->searchable()
+                        ->bulkToggleable()
+                        ->columns(2),
+                ]),
         ]);
     }
 

@@ -1,0 +1,6 @@
+{
+    "id": "example",
+    "name": "Example Module",
+    "version": "1.0.0",
+    "description": "Beispiel-Modul für den ZIP-Installer. Zeigt eine kleine Sidebar-Box."
+}

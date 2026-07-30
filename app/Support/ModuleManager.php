@@ -120,6 +120,39 @@ class ModuleManager
         }
         $json = json_decode(File::get($path), true);
         // Invalid JSON → return empty schema so form still renders
-        return is_array($json) ? $json : [];
+        if (! is_array($json)) {
+            return [];
+        }
+
+        return $this->normalizeSchema($json);
+    }
+
+    /**
+     * @param  array<int|string, mixed>  $schema
+     * @return array<int, array{key: string, type: string, label: string, default?: mixed, help?: string}>
+     */
+    protected function normalizeSchema(array $schema): array
+    {
+        $out = [];
+        foreach ($schema as $key => $item) {
+            if (! is_array($item)) {
+                continue;
+            }
+            if (! isset($item['key']) && ! isset($item['type']) && is_string($key)) {
+                $item['key'] = $key;
+            }
+            $fieldKey = (string) ($item['key'] ?? '');
+            if ($fieldKey === '') {
+                continue;
+            }
+            $item['key'] = $fieldKey;
+            $item['type'] = (string) ($item['type'] ?? 'text');
+            if (empty($item['label'])) {
+                $item['label'] = \Illuminate\Support\Str::headline(str_replace('_', ' ', $fieldKey));
+            }
+            $out[] = $item;
+        }
+
+        return $out;
     }
 }

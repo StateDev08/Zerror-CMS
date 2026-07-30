@@ -12,13 +12,17 @@ use Illuminate\Support\Str;
 
 class JobOfferCategoryResource extends Resource
 {
+    use \App\Filament\Concerns\ChecksCmsPermissions;
+
     protected static ?string $model = JobOfferCategory::class;
 
     protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-briefcase';
 
-    protected static ?string $navigationLabel = 'Kategorien';
+    protected static ?string $navigationLabel = 'Stellen-Kategorien';
 
-    protected static \UnitEnum|string|null $navigationGroup = 'Stellenangebote';
+    protected static \UnitEnum|string|null $navigationGroup = 'Markt & Jobs';
+
+    protected static ?int $navigationSort = 20;
 
     public static function form(Schema $schema): Schema
     {

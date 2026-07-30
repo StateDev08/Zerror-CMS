@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class MarketplaceListing extends Model
 {
-    protected $fillable = ['category_id', 'title', 'slug', 'description', 'price_type', 'price_value', 'contact_info', 'published'];
+    protected $fillable = ['category_id', 'user_id', 'title', 'slug', 'description', 'price_type', 'price_value', 'contact_info', 'published'];
 
     protected function casts(): array
     {
@@ -20,6 +20,11 @@ class MarketplaceListing extends Model
     public function category(): BelongsTo
     {
         return $this->belongsTo(MarketplaceCategory::class, 'category_id');
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 
     public function getRouteKeyName(): string

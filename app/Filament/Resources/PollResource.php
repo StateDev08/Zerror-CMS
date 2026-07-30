@@ -15,6 +15,8 @@ use Filament\Tables\Table;
 
 class PollResource extends Resource
 {
+    use \App\Filament\Concerns\ChecksCmsPermissions;
+
     protected static ?string $model = Poll::class;
 
     protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-chart-bar';
@@ -22,6 +24,8 @@ class PollResource extends Resource
     protected static ?string $navigationLabel = 'Umfragen';
 
     protected static \UnitEnum|string|null $navigationGroup = 'Inhalte';
+
+    protected static ?int $navigationSort = 70;
 
     public static function form(Schema $schema): Schema
     {

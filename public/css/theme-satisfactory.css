@@ -1,0 +1,101 @@
+/* Satisfactory — Fabrik / HUD / Tech */
+
+.theme-satisfactory {
+    --gs-radius: 0.15rem;
+    --gs-panel: color-mix(in srgb, var(--theme-surface) 92%, #000);
+    --gs-line: color-mix(in srgb, var(--theme-primary) 50%, transparent);
+    font-family: 'Exo 2', system-ui, sans-serif;
+    background:
+        linear-gradient(90deg, rgba(0,0,0,.15) 1px, transparent 1px) 0 0 / 48px 48px,
+        linear-gradient(rgba(0,0,0,.12) 1px, transparent 1px) 0 0 / 48px 48px,
+        radial-gradient(ellipse 60% 40% at 80% 0%, color-mix(in srgb, var(--theme-primary) 18%, transparent), transparent 55%),
+        var(--theme-bg);
+}
+
+.theme-satisfactory .font-display {
+    font-family: 'Orbitron', system-ui, sans-serif;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.theme-satisfactory .gs-top {
+    border-bottom: 2px solid var(--theme-primary);
+    background: color-mix(in srgb, #0a0c10 92%, var(--theme-primary));
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 6px), calc(100% - 12px) 100%, 12px 100%, 0 calc(100% - 6px));
+}
+
+.theme-satisfactory .top-nav a {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--theme-primary) 85%, #fff);
+    padding: 0.25rem 0.4rem;
+    border: 1px solid transparent;
+}
+.theme-satisfactory .top-nav a:hover,
+.theme-satisfactory .top-nav a[aria-current="page"] {
+    color: #fff;
+    border-color: color-mix(in srgb, var(--theme-primary) 60%, transparent);
+    background: color-mix(in srgb, var(--theme-primary) 12%, transparent);
+}
+
+.theme-satisfactory .gs-hero {
+    border-radius: 0;
+    border: 2px solid var(--theme-primary);
+    clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 18px 100%, 0 calc(100% - 18px));
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--theme-accent) 40%, transparent), 0 12px 36px rgba(0,0,0,.5);
+}
+
+.theme-satisfactory .gs-panel,
+.theme-satisfactory .cms-widget,
+.theme-satisfactory .auth-card {
+    border-radius: 0 !important;
+    border: 1px solid color-mix(in srgb, var(--theme-primary) 45%, transparent) !important;
+    background: color-mix(in srgb, var(--theme-surface) 90%, #000) !important;
+    box-shadow:
+        inset 0 0 0 1px color-mix(in srgb, var(--theme-accent) 15%, transparent),
+        0 10px 28px rgba(0,0,0,.4) !important;
+    position: relative;
+}
+.theme-satisfactory .gs-panel::before,
+.theme-satisfactory .cms-widget::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 12px; height: 12px;
+    border-top: 2px solid var(--theme-primary);
+    border-left: 2px solid var(--theme-primary);
+    pointer-events: none;
+}
+
+.theme-satisfactory .cms-widget__title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.68rem;
+    color: var(--theme-primary) !important;
+    letter-spacing: 0.12em;
+}
+
+.theme-satisfactory .cms-widget__cta,
+.theme-satisfactory .theme-bg-primary,
+.theme-satisfactory .auth-card__submit {
+    border-radius: 0 !important;
+    clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+    background: linear-gradient(90deg, var(--theme-primary), color-mix(in srgb, var(--theme-primary) 60%, var(--theme-accent))) !important;
+    color: #111 !important;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+}
+
+.theme-satisfactory .auth-card__input {
+    border-radius: 0 !important;
+    border: 1px solid color-mix(in srgb, var(--theme-primary) 40%, transparent) !important;
+    background: #0a0d11 !important;
+    font-family: 'Exo 2', sans-serif;
+}
+
+.theme-satisfactory .gs-footer {
+    border-top: 2px solid var(--theme-primary);
+    background: #07090c;
+}

@@ -1,0 +1,9 @@
+[
+    {"key": "title", "type": "text", "label": "Titel", "default": "Live Stream"},
+    {"key": "mode", "type": "text", "label": "Modus (embed|link)", "default": "embed"},
+    {"key": "platform", "type": "text", "label": "Plattform (twitch|youtube)", "default": "twitch"},
+    {"key": "channel_or_url", "type": "text", "label": "Kanal / Video-ID / URL", "default": ""},
+    {"key": "parent_domain", "type": "text", "label": "Twitch parent Domain", "default": "", "help": "z. B. example.com ohne https"},
+    {"key": "show_chat", "type": "boolean", "label": "Twitch-Chat anzeigen", "default": false},
+    {"key": "button_text", "type": "text", "label": "Button (Link-Modus)", "default": "Zum Stream"}
+]

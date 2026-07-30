@@ -1,8 +1,10 @@
 @import 'tailwindcss';
+@import './cms-widgets.css';
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
 @source '../**/*.blade.php';
+@source '../../themes/**/*.blade.php';
 @source '../**/*.js';
 
 /* Dark mode via class on html (set by frontend script from cookie) */
@@ -11,4 +13,49 @@
 @theme {
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
+}
+
+/* Globale Widget-Spalten: eigene Boxen links/rechts neben der Content-Box */
+.global-widgets-grid {
+    display: grid;
+    gap: 1cm;
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+    width: 100%;
+}
+.global-widgets-main { min-width: 0; width: 100%; }
+.global-widgets-main > main { padding: 1cm; }
+.global-widgets-left,
+.global-widgets-right {
+    min-width: 0;
+    width: 100%;
+    height: fit-content;
+    align-self: start;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75cm;
+    padding: 0.75cm;
+    box-sizing: border-box;
+}
+@media (max-width: 1023px) {
+    .global-widgets-main { order: -1; }
+    .global-widgets-grid { gap: 0.75cm; }
+}
+@media (min-width: 1024px) {
+    .global-widgets-grid--both {
+        grid-template-columns: minmax(12rem, 16rem) minmax(0, 1fr) minmax(12rem, 16rem);
+    }
+    .global-widgets-grid--left {
+        grid-template-columns: minmax(12rem, 16rem) minmax(0, 1fr);
+    }
+    .global-widgets-grid--right {
+        grid-template-columns: minmax(0, 1fr) minmax(12rem, 16rem);
+    }
+    .global-widgets-main { order: 0; }
+    .global-widgets-left {
+        border-radius: 1rem 0.35rem 0.35rem 1rem;
+    }
+    .global-widgets-right {
+        border-radius: 0.35rem 1rem 1rem 0.35rem;
+    }
 }

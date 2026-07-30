@@ -2,8 +2,9 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Forms\CmsRichEditor;
+
 use App\Models\GalleryAlbum;
-use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -13,20 +14,24 @@ use Illuminate\Support\Str;
 
 class GalleryAlbumResource extends Resource
 {
+    use \App\Filament\Concerns\ChecksCmsPermissions;
+
     protected static ?string $model = GalleryAlbum::class;
 
     protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-photo';
 
     protected static ?string $navigationLabel = 'Alben';
 
-    protected static \UnitEnum|string|null $navigationGroup = 'Galerie';
+    protected static \UnitEnum|string|null $navigationGroup = 'Community';
+
+    protected static ?int $navigationSort = 30;
 
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
             TextInput::make('name')->required()->live(onBlur: true)->afterStateUpdated(fn ($state, $set) => $set('slug', Str::slug($state))),
             TextInput::make('slug')->required(),
-            Textarea::make('description')->nullable()->rows(3),
+            CmsRichEditor::compact('description')->nullable(),
             TextInput::make('order')->numeric()->default(0),
         ]);
     }

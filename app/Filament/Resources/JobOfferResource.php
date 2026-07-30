@@ -5,7 +5,7 @@ namespace App\Filament\Resources;
 use App\Models\JobOffer;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Textarea;
+use App\Filament\Forms\CmsRichEditor;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
@@ -17,13 +17,17 @@ use Illuminate\Support\Str;
 
 class JobOfferResource extends Resource
 {
+    use \App\Filament\Concerns\ChecksCmsPermissions;
+
     protected static ?string $model = JobOffer::class;
 
     protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-newspaper';
 
     protected static ?string $navigationLabel = 'Stellenangebote';
 
-    protected static \UnitEnum|string|null $navigationGroup = 'Stellenangebote';
+    protected static \UnitEnum|string|null $navigationGroup = 'Markt & Jobs';
+
+    protected static ?int $navigationSort = 25;
 
     public static function form(Schema $schema): Schema
     {
@@ -31,7 +35,7 @@ class JobOfferResource extends Resource
             Select::make('category_id')->relationship('category', 'name')->nullable(),
             TextInput::make('title')->required()->live(onBlur: true)->afterStateUpdated(fn ($state, $set) => $set('slug', Str::slug($state))),
             TextInput::make('slug')->required(),
-            Textarea::make('description')->nullable()->rows(8)->columnSpanFull(),
+            CmsRichEditor::make('description')->nullable(),
             TextInput::make('location')->nullable(),
             Select::make('employment_type')->options([
                 'full-time' => 'Vollzeit',

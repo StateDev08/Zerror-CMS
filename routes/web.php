@@ -5,6 +5,7 @@ use App\Http\Controllers\StorageServeController;
 use App\Models\ClanMember;
 use App\Models\Event;
 use App\Models\Post;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 // Storage-Dateien über Laravel ausliefern (funktioniert ohne Symlink, umgeht 403/404)
@@ -31,17 +32,26 @@ Route::get('status', function () {
 // Installer (nur wenn noch nicht installiert)
 Route::middleware('install.redirect')->prefix('install')->name('install.')->group(function () {
     Route::get('/', [InstallController::class, 'index'])->name('index');
+    Route::post('/dependencies', [InstallController::class, 'dependencies'])->name('dependencies');
     Route::post('/database', [InstallController::class, 'database'])->name('database');
     Route::get('/migrate', [InstallController::class, 'migrate'])->name('migrate');
+    Route::post('/site', [InstallController::class, 'site'])->name('site');
+    Route::post('/discord', [InstallController::class, 'discord'])->name('discord');
+    Route::post('/mail-test', [InstallController::class, 'mailTest'])->name('mail-test');
+    Route::post('/mail', [InstallController::class, 'mail'])->name('mail');
     Route::post('/finish', [InstallController::class, 'finish'])->name('finish');
 });
 
-// Frontend Login / Register / Logout
+// Frontend Login / Register / Logout / Password Reset
 Route::middleware('guest')->group(function () {
     Route::get('login', [App\Http\Controllers\Auth\AuthController::class, 'showLoginForm'])->name('login');
     Route::post('login', [App\Http\Controllers\Auth\AuthController::class, 'login']);
     Route::get('register', [App\Http\Controllers\Auth\AuthController::class, 'showRegisterForm'])->name('register');
     Route::post('register', [App\Http\Controllers\Auth\AuthController::class, 'register']);
+    Route::get('forgot-password', [App\Http\Controllers\Auth\PasswordResetController::class, 'showForgotForm'])->name('password.request');
+    Route::post('forgot-password', [App\Http\Controllers\Auth\PasswordResetController::class, 'sendResetLink'])->name('password.email');
+    Route::get('reset-password/{token}', [App\Http\Controllers\Auth\PasswordResetController::class, 'showResetForm'])->name('password.reset');
+    Route::post('reset-password', [App\Http\Controllers\Auth\PasswordResetController::class, 'reset'])->name('password.update');
 });
 Route::post('logout', [App\Http\Controllers\Auth\AuthController::class, 'logout'])->middleware('auth')->name('logout');
 
@@ -59,25 +69,67 @@ Route::get('/news', function () {
 })->name('news.index');
 
 Route::get('/news/{slug}', function (string $slug) {
-    $post = Post::where('type', 'news')->where('published', true)->where('slug', $slug)->firstOrFail();
+    $post = Post::where('type', 'news')->where('published', true)->where('slug', $slug)->with('author')->firstOrFail();
     return view('theme::news.show', ['post' => $post]);
 })->name('news.show');
 
 Route::get('/roster', function () {
-    $members = ClanMember::with('rank')->where('visible', true)->orderBy('order')->get()->groupBy('rank_id');
-    $ranks = \App\Models\Rank::orderBy('order')->get();
-    return view('theme::roster.index', ['members' => $members, 'ranks' => $ranks]);
+    $users = User::query()
+        ->with(['clanMember.rank', 'roles'])
+        ->orderBy('name')
+        ->get();
+
+    $linkedUserIds = $users->pluck('id')->all();
+
+    $orphanMembers = ClanMember::with('rank')
+        ->where('visible', true)
+        ->where(function ($q) use ($linkedUserIds) {
+            $q->whereNull('user_id');
+            if ($linkedUserIds !== []) {
+                $q->orWhereNotIn('user_id', $linkedUserIds);
+            }
+        })
+        ->orderBy('order')
+        ->get();
+
+    $entries = $users->map(function (User $user) {
+        $clan = $user->clanMember;
+        $visibleClan = $clan && $clan->visible ? $clan : null;
+        $rankName = $visibleClan?->rank?->name
+            ?? $user->getRoleNames()
+                ->map(fn ($n) => ucwords(str_replace('-', ' ', (string) $n)))
+                ->first();
+
+        return [
+            'name' => $visibleClan?->display_name ?: $user->name,
+            'avatar' => ($visibleClan?->avatar ? storage_asset($visibleClan->avatar) : null) ?: $user->avatar_url,
+            'position' => $visibleClan?->position,
+            'rank' => $rankName,
+            'rank_color' => $visibleClan?->rank?->color,
+            'registered_at' => $user->created_at,
+        ];
+    });
+
+    foreach ($orphanMembers as $member) {
+        $entries->push([
+            'name' => $member->display_name,
+            'avatar' => $member->avatar ? storage_asset($member->avatar) : null,
+            'position' => $member->position,
+            'rank' => $member->rank?->name,
+            'rank_color' => $member->rank?->color,
+            'registered_at' => $member->created_at,
+        ]);
+    }
+
+    return view('theme::roster.index', [
+        'entries' => $entries->values(),
+    ]);
 })->name('roster.index');
 
-Route::get('/calendar', function () {
-    $events = Event::where('visible', true)->where('starts_at', '>=', now()->startOfMonth())->orderBy('starts_at')->paginate(20);
-    return view('theme::calendar.index', ['events' => $events]);
-})->name('calendar.index');
 
-Route::get('/calendar/event/{id}', function (int $id) {
-    $event = Event::where('visible', true)->findOrFail($id);
-    return view('theme::calendar.show', ['event' => $event]);
-})->name('calendar.show');
+Route::get('/calendar', [App\Http\Controllers\CalendarController::class, 'index'])->name('calendar.index');
+
+Route::get('/calendar/event/{id}', [App\Http\Controllers\CalendarController::class, 'show'])->name('calendar.show');
 
 Route::get('/apply', function () {
     if (! (bool) filter_var(setting('applications_enabled', '1'), FILTER_VALIDATE_BOOLEAN)) {
@@ -93,22 +145,29 @@ Route::post('/apply', function (\Illuminate\Http\Request $request) {
     $validated = $request->validate([
         'name' => 'required|string|max:255',
         'email' => 'required|email',
-        'message' => 'required|string|max:5000',
+        'message' => 'required|string|max:50000',
     ]);
+
+    $html = \App\Support\HtmlContent::sanitizeRequired(
+        $validated['message'],
+        'message',
+        __('apply.message')
+    );
+
     $application = \App\Models\Application::create([
         'name' => $validated['name'],
         'email' => $validated['email'],
-        'message' => $validated['message'],
+        'message' => $html,
     ]);
-    $notifyEmail = config('clan.application_notify_email');
+    $notifyEmail = \App\Support\SiteContent::applicationNotifyEmail();
     if ($notifyEmail) {
         \Illuminate\Support\Facades\Mail::to($notifyEmail)->send(new \App\Mail\ApplicationReceivedMail($application));
     }
-    $webhookUrl = config('clan.discord_webhook_url');
+    $webhookUrl = \App\Support\SiteContent::discordWebhookUrl();
     if ($webhookUrl) {
         try {
             \Illuminate\Support\Facades\Http::post($webhookUrl, [
-                'content' => __('mail.application_received_subject', ['name' => config('clan.name')]) . "\n" . $application->name . ' (' . $application->email . ')',
+                'content' => __('mail.application_received_subject', ['name' => site_name()]) . "\n" . $application->name . ' (' . $application->email . ')',
             ]);
         } catch (\Throwable $e) {
             report($e);
@@ -118,9 +177,29 @@ Route::post('/apply', function (\Illuminate\Http\Request $request) {
 })->middleware('throttle:5,1')->name('apply.store');
 
 Route::get('/page/{slug}', function (string $slug) {
-    $page = Post::where('type', 'page')->where('slug', $slug)->firstOrFail();
+    $cmsPage = \App\Models\CmsPage::query()
+        ->where('slug', $slug)
+        ->where('published', true)
+        ->first();
+
+    if ($cmsPage) {
+        return view('theme::page.show', ['slug' => $slug, 'page' => $cmsPage]);
+    }
+
+    $page = Post::where('type', 'page')
+        ->where('slug', $slug)
+        ->where('published', true)
+        ->firstOrFail();
+
     return view('theme::page.show', ['slug' => $slug, 'page' => $page]);
 })->name('page.show');
+
+// Kurz-URLs für Rechtsseiten
+foreach (['impressum', 'datenschutz', 'agb', 'cookies'] as $legalSlug) {
+    Route::redirect('/'.$legalSlug, '/page/'.$legalSlug, 301);
+}
+
+Route::get('/servers', [App\Http\Controllers\ServerStatusController::class, 'index'])->name('servers.index');
 
 Route::get('/gallery', [App\Http\Controllers\GalleryController::class, 'index'])->name('gallery.index');
 Route::get('/gallery/album/{album}', [App\Http\Controllers\GalleryController::class, 'showAlbum'])->name('gallery.album');
@@ -136,6 +215,7 @@ Route::post('/polls/{poll}/vote', [App\Http\Controllers\PollController::class, '
 
 Route::get('/newsletter', function () { return view('theme::newsletter.subscribe'); })->name('newsletter.index');
 Route::post('/newsletter', [App\Http\Controllers\NewsletterController::class, 'subscribe'])->name('newsletter.subscribe');
+Route::get('/newsletter/unsubscribe/{token}', [App\Http\Controllers\NewsletterController::class, 'unsubscribe'])->name('newsletter.unsubscribe');
 
 Route::get('/wiki', [App\Http\Controllers\WikiController::class, 'index'])->name('wiki.index');
 Route::get('/wiki/search', [App\Http\Controllers\WikiController::class, 'search'])->name('wiki.search');
@@ -144,11 +224,19 @@ Route::get('/wiki/{slug}', [App\Http\Controllers\WikiController::class, 'show'])
 
 Route::get('/marketplace', [App\Http\Controllers\MarketplaceController::class, 'index'])->name('marketplace.index');
 Route::get('/marketplace/category/{category:slug}', [App\Http\Controllers\MarketplaceController::class, 'category'])->name('marketplace.category')->scopeBindings();
+Route::middleware('auth')->group(function () {
+    Route::get('/marketplace/create', [App\Http\Controllers\MarketplaceController::class, 'create'])->name('marketplace.create');
+    Route::post('/marketplace', [App\Http\Controllers\MarketplaceController::class, 'store'])->name('marketplace.store');
+    Route::get('/marketplace/{listing:slug}/edit', [App\Http\Controllers\MarketplaceController::class, 'edit'])->name('marketplace.edit')->scopeBindings();
+    Route::put('/marketplace/{listing:slug}', [App\Http\Controllers\MarketplaceController::class, 'update'])->name('marketplace.update')->scopeBindings();
+    Route::delete('/marketplace/{listing:slug}', [App\Http\Controllers\MarketplaceController::class, 'destroy'])->name('marketplace.destroy')->scopeBindings();
+});
 Route::get('/marketplace/{listing:slug}', [App\Http\Controllers\MarketplaceController::class, 'show'])->name('marketplace.show');
 
 Route::get('/jobs', [App\Http\Controllers\JobOfferController::class, 'index'])->name('jobs.index');
 Route::get('/jobs/category/{category:slug}', [App\Http\Controllers\JobOfferController::class, 'category'])->name('jobs.category')->scopeBindings();
 Route::get('/jobs/{jobOffer:slug}', [App\Http\Controllers\JobOfferController::class, 'show'])->name('jobs.show');
+Route::post('/jobs/{jobOffer:slug}/apply', [App\Http\Controllers\JobOfferController::class, 'apply'])->middleware('throttle:5,1')->name('jobs.apply')->scopeBindings();
 
 // User Control Panel (eingeloggt)
 Route::middleware('auth')->prefix('usercp')->name('usercp.')->group(function () {
@@ -157,6 +245,12 @@ Route::middleware('auth')->prefix('usercp')->name('usercp.')->group(function () 
     Route::put('/profile', [App\Http\Controllers\UserCpController::class, 'updateProfile'])->name('profile.update');
     Route::get('/password', [App\Http\Controllers\UserCpController::class, 'password'])->name('password');
     Route::put('/password', [App\Http\Controllers\UserCpController::class, 'updatePassword'])->name('password.update');
+    Route::get('/discord', [App\Http\Controllers\UserCpController::class, 'discord'])->name('discord');
+    Route::post('/discord/generate', [App\Http\Controllers\UserCpController::class, 'generateDiscordLinkToken'])->name('discord.generate');
+    Route::post('/discord/unlink', [App\Http\Controllers\UserCpController::class, 'unlinkDiscord'])->name('discord.unlink');
+    Route::get('/notifications', [App\Http\Controllers\UserCpController::class, 'notifications'])->name('notifications');
+    Route::post('/notifications/read-all', [App\Http\Controllers\UserCpController::class, 'markAllRead'])->name('notifications.read-all');
+    Route::match(['get', 'post'], '/notifications/{notification}/read', [App\Http\Controllers\UserCpController::class, 'markRead'])->name('notifications.read');
     Route::get('/auftraege', [App\Http\Controllers\UserCpController::class, 'itemRequests'])->name('item-requests');
 });
 
@@ -168,11 +262,22 @@ Route::get('/forum/{forum}/thread/create', [App\Http\Controllers\ForumController
 Route::post('/forum/{forum}/thread', [App\Http\Controllers\ForumController::class, 'storeThread'])->name('forum.thread.store');
 Route::get('/forum/thread/{thread}', [App\Http\Controllers\ForumController::class, 'showThread'])->name('forum.thread.show');
 Route::post('/forum/thread/{thread}/reply', [App\Http\Controllers\ForumController::class, 'reply'])->name('forum.thread.reply');
+Route::middleware('auth')->group(function () {
+    Route::get('/forum/thread/{thread}/edit', [App\Http\Controllers\ForumController::class, 'editThread'])->name('forum.thread.edit');
+    Route::put('/forum/thread/{thread}', [App\Http\Controllers\ForumController::class, 'updateThread'])->name('forum.thread.update');
+    Route::delete('/forum/thread/{thread}', [App\Http\Controllers\ForumController::class, 'destroyThread'])->name('forum.thread.destroy');
+    Route::post('/forum/thread/{thread}/pin', [App\Http\Controllers\ForumController::class, 'togglePin'])->name('forum.thread.toggle-pin');
+    Route::post('/forum/thread/{thread}/lock', [App\Http\Controllers\ForumController::class, 'toggleLock'])->name('forum.thread.toggle-lock');
+    Route::get('/forum/post/{post}/edit', [App\Http\Controllers\ForumController::class, 'editPost'])->name('forum.post.edit');
+    Route::put('/forum/post/{post}', [App\Http\Controllers\ForumController::class, 'updatePost'])->name('forum.post.update');
+    Route::delete('/forum/post/{post}', [App\Http\Controllers\ForumController::class, 'destroyPost'])->name('forum.post.destroy');
+});
 
 // Clan-Module
 Route::get('/clan/teams', [App\Http\Controllers\ClanTeamController::class, 'index'])->name('clan-teams.index');
 Route::get('/clan/teams/{clanTeam:slug}', [App\Http\Controllers\ClanTeamController::class, 'show'])->name('clan-teams.show')->scopeBindings();
 Route::get('/clan/bank', [App\Http\Controllers\ClanBankController::class, 'index'])->name('clan-bank.index');
+Route::get('/clan/treasury', [App\Http\Controllers\ClanTreasuryController::class, 'index'])->name('clan-treasury.index');
 Route::get('/clan/rules', [App\Http\Controllers\ClanRuleController::class, 'index'])->name('clan-rules.index');
 Route::get('/clan/leaderboard', [App\Http\Controllers\ClanLeaderboardController::class, 'index'])->name('clan-leaderboard.index');
 Route::get('/clan/leaderboard/{category:slug}', [App\Http\Controllers\ClanLeaderboardController::class, 'category'])->name('clan-leaderboard.category')->scopeBindings();
